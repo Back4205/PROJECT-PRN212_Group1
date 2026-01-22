@@ -1,0 +1,115 @@
+{
+  "version": 3,
+  "targets": {
+    "net8.0": {
+      "LaptopStore.Entities/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/LaptopStore.Entities.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/LaptopStore.Entities.dll": {}
+        }
+      },
+      "LaptopStore.Repositories/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "LaptopStore.Entities": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/LaptopStore.Repositories.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/LaptopStore.Repositories.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "LaptopStore.Entities/1.0.0": {
+      "type": "project",
+      "path": "../LaptopStore.Entities/LaptopStore.Entities.csproj",
+      "msbuildProject": "../LaptopStore.Entities/LaptopStore.Entities.csproj"
+    },
+    "LaptopStore.Repositories/1.0.0": {
+      "type": "project",
+      "path": "../LaptopStore.Repositories/LaptopStore.Repositories.csproj",
+      "msbuildProject": "../LaptopStore.Repositories/LaptopStore.Repositories.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "LaptopStore.Repositories >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\ADMIN\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "D:\\FU-learning\\SPRING-2026_ky5\\PRN212\\PROJECT_PRN212_Group1\\PROJECT-PRN212_Group1\\LaptopShop.WPF\\LaptopStore.Services\\LaptopStore.Services.csproj",
+      "projectName": "LaptopStore.Services",
+      "projectPath": "D:\\FU-learning\\SPRING-2026_ky5\\PRN212\\PROJECT_PRN212_Group1\\PROJECT-PRN212_Group1\\LaptopShop.WPF\\LaptopStore.Services\\LaptopStore.Services.csproj",
+      "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+      "outputPath": "D:\\FU-learning\\SPRING-2026_ky5\\PRN212\\PROJECT_PRN212_Group1\\PROJECT-PRN212_Group1\\LaptopShop.WPF\\LaptopStore.Services\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "projectReferences": {
+            "D:\\FU-learning\\SPRING-2026_ky5\\PRN212\\PROJECT_PRN212_Group1\\PROJECT-PRN212_Group1\\LaptopShop.WPF\\LaptopStore.Repositories\\LaptopStore.Repositories.csproj": {
+              "projectPath": "D:\\FU-learning\\SPRING-2026_ky5\\PRN212\\PROJECT_PRN212_Group1\\PROJECT-PRN212_Group1\\LaptopShop.WPF\\LaptopStore.Repositories\\LaptopStore.Repositories.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      }
+    },
+    "frameworks": {
+      "net8.0": {
+        "targetAlias": "net8.0",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}
