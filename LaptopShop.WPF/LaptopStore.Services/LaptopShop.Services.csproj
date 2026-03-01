@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LaptopStore.Entities\LaptopStore.Entities.csproj" />
+    <ProjectReference Include="..\LaptopStore.Entities\LaptopShop.Entities.csproj" />
+    <ProjectReference Include="..\LaptopStore.Repositories\LaptopShop.Repositories.csproj" />
   </ItemGroup>
 
 </Project>

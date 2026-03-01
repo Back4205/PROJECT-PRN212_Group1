@@ -6,8 +6,5 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\LaptopStore.Repositories\LaptopStore.Repositories.csproj" />
-  </ItemGroup>
 
 </Project>
