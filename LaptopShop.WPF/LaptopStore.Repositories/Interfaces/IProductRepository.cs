@@ -14,5 +14,7 @@ namespace LaptopShop.Repositories.Interfaces
         void Add(Product product);
         void Update(Product product);
         void Delete(int id);
+        List<Product> SearchByName(string keyword);
+        List<Product> FilterByPrice(decimal minPrice, decimal maxPrice);
     }
 }

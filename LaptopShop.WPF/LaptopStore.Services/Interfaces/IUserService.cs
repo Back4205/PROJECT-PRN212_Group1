@@ -11,5 +11,9 @@ namespace LaptopShop.Services.Interfaces
     {
         User Login(string username, string password);
         void Register(User user);
+        bool IsUsernameExists(string username);
+
+        bool IsEmailExists(string email);
+        List<Role> GetRolesByUserId(int userId);
     }
 }

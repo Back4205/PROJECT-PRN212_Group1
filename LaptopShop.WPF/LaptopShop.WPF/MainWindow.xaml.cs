@@ -8,7 +8,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows;
 using LaptopShop.WPF.Frames;
+using LaptopShop.Entities.Models;
 
 namespace LaptopShop.WPF
 {
@@ -17,10 +19,42 @@ namespace LaptopShop.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private User _currentUser;
+        private Role _currentRole;
+
+        public MainWindow(User user, Role role)
         {
             InitializeComponent();
-            MainFrame.Navigate(new AdminHomePage());
+
+            _currentUser = user;
+            _currentRole = role;
+
+            LoadHomePageByRole();
+        }
+
+        private void LoadHomePageByRole()
+        {
+            switch (_currentRole.RoleName)
+            {
+                case "Admin":
+                    MainFrame.Navigate(new AdminHomePage());
+                    break;
+
+                case "Staff":
+                    MainFrame.Navigate(new StaffHomePage());
+                    break;
+
+                case "Customer":
+                    MainFrame.Navigate(new CustomerHomePage());
+                    break;
+                case "Warehouse":
+                    MainFrame.Navigate(new WarehouseHomePage());
+                    break;
+
+                default:
+                    MessageBox.Show("Unknown role!");
+                    break;
+            }
         }
     }
 }
