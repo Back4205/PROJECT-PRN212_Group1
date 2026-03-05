@@ -3,19 +3,59 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:LaptopShop.WPF"
         mc:Ignorable="d"
-        Title="Login" Height="450" Width="800">
-    <Grid>
+        Title="Laptop Shop - Login" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="Transparent">
 
-        <Label Content="UserName :" HorizontalAlignment="Left" Margin="181,89,0,0" VerticalAlignment="Top" Height="23" Width="74"/>
-        <Label Content="Password :" HorizontalAlignment="Left" Margin="181,135,0,0" VerticalAlignment="Top" Height="23" Width="74"/>
-        <TextBox x:Name="txtUserName" HorizontalAlignment="Left" Margin="270,92,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="157"/>
-        <PasswordBox x:Name="pwdPassword" HorizontalAlignment="Left" Margin="270,138,0,0" VerticalAlignment="Top" Width="157"/>
-        <Button x:Name="btnLogin" Content="Login" HorizontalAlignment="Left" Margin="270,182,0,0" VerticalAlignment="Top" Height="20" Width="68" Click="btnLogin_Click"/>
-        <Button x:Name="btnRegister" Content="Register" HorizontalAlignment="Left" Margin="359,182,0,0" VerticalAlignment="Top" Height="20" Width="68" Click="btnRegister_Click"/>
-        <Label Content="WellCome To LaptopShop" HorizontalAlignment="Left" Margin="270,18,0,0" VerticalAlignment="Top"/>
+    <Border CornerRadius="20" Background="White">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="20" Color="#EEEEEE" ShadowDepth="2"/>
+        </Border.Effect>
 
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="350"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-    </Grid>
+            <Border Grid.Column="0" CornerRadius="20,0,0,20">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#2193b0" Offset="0"/>
+                        <GradientStop Color="#6dd5ed" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="LAPTOP SHOP" Foreground="White" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Premium Experience" Foreground="White" FontSize="14" Opacity="0.8" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="50,0">
+                <TextBlock Text="Đăng Nhập" FontSize="26" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,30"/>
+
+                <TextBlock Text="Tên đăng nhập" Foreground="#888" Margin="0,0,0,5"/>
+                <Border BorderBrush="#DDD" BorderThickness="0,0,0,1" Margin="0,0,0,20">
+                    <TextBox x:Name="txtUserName" BorderThickness="0" FontSize="14" Padding="5" Background="Transparent"/>
+                </Border>
+
+                <TextBlock Text="Mật khẩu" Foreground="#888" Margin="0,0,0,5"/>
+                <Border BorderBrush="#DDD" BorderThickness="0,0,0,1" Margin="0,0,0,30">
+                    <PasswordBox x:Name="pwdPassword" BorderThickness="0" FontSize="14" Padding="5" Background="Transparent"/>
+                </Border>
+
+                <Button x:Name="btnLogin" Content="LOGIN" Height="40" Background="#2193b0" Foreground="White" FontWeight="Bold" Cursor="Hand" Click="btnLogin_Click">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="20"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+                <Button x:Name="btnRegister" Content="Chưa có tài khoản? Đăng ký ngay" Background="Transparent" BorderThickness="0" Foreground="#2193b0" Margin="0,15,0,0" Cursor="Hand" Click="btnRegister_Click"/>
+
+               
+            </StackPanel>
+        </Grid>
+    </Border>
 </Window>

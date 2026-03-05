@@ -19,27 +19,55 @@ namespace LaptopShop.Repositories.Implementations
 
         public void Add(Product product)
         {
-            throw new NotImplementedException();
+            _context.Add(product);
+            _context.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
+            if(product != null)
+            {
+                _context.Products.Remove(product);
+                _context.SaveChanges();
+            }
+        }
+
+        public List<Product> FilterByPrice(decimal minPrice, decimal maxPrice)
+        {
+            return _context.Products
+                   .Where(p => p.BasePrice >= minPrice && p.BasePrice <= maxPrice)
+                   .ToList();
         }
 
         public List<Product> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Products.ToList();
         }
 
         public Product GetById(int id)
         {
-            throw new NotImplementedException();
+            return _context.Products.FirstOrDefault(p => p.ProductId == id);
+        }
+
+        public List<Product> SearchByName(string keyword)
+        {
+            return _context.Products.Where(p => p.ProductName.Contains(keyword)).ToList();
         }
 
         public void Update(Product product)
         {
-            throw new NotImplementedException();
+            var oldProduct = _context.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
+            if (oldProduct != null)
+            {
+                oldProduct.ProductName = product.ProductName;
+                oldProduct.ProductCode = product.ProductCode;
+                oldProduct.Brand = product.Brand;
+                oldProduct.BasePrice = product.BasePrice;
+                oldProduct.ImgUrl = product.ImgUrl;
+
+                _context.SaveChanges();
+            }
         }
     }
 }
