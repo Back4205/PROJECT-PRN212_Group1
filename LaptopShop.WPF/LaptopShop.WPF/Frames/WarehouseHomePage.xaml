@@ -8,7 +8,7 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="WarehouseHomePage">
 
-    <Grid>
+    <Grid  Background="White">
         <Label Content="warehouse01 " HorizontalAlignment="Left" Margin="255,130,0,0" VerticalAlignment="Top" Height="84" Width="112"/>
     </Grid>
 </Page>

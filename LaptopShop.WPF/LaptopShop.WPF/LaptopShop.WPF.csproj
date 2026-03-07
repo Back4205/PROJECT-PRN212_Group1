@@ -9,15 +9,36 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Banner.jpg" />
+    <None Remove="Images\mba.jpg" />
+    <None Remove="Images\rog.jpg" />
+    <None Remove="Images\xps13.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LaptopStore.Entities\LaptopShop.Entities.csproj" />
     <ProjectReference Include="..\LaptopStore.Services\LaptopShop.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Pages\Admin\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\Banner.jpg" />
+    <Resource Include="Images\mba.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\rog.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\xps13.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

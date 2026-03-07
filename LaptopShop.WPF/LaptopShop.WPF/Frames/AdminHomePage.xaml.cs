@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LaptopShop.Entities.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,11 @@ namespace LaptopShop.WPF.Frames
     /// </summary>
     public partial class AdminHomePage : Page
     {
-        public AdminHomePage()
+        private User _user;
+        public AdminHomePage(User user)
         {
             InitializeComponent();
+            _user = user;
         }
     }
 }
