@@ -37,18 +37,18 @@ namespace LaptopShop.WPF
             switch (_currentRole.RoleName)
             {
                 case "Admin":
-                    MainFrame.Navigate(new AdminHomePage());
+                    MainFrame.Navigate(new AdminHomePage(_currentUser));
                     break;
 
                 case "Staff":
-                    MainFrame.Navigate(new StaffHomePage());
+                    MainFrame.Navigate(new StaffHomePage(_currentUser));
                     break;
 
                 case "Customer":
-                    MainFrame.Navigate(new CustomerHomePage());
+                    MainFrame.Navigate(new CustomerHomePage(_currentUser));
                     break;
                 case "Warehouse":
-                    MainFrame.Navigate(new WarehouseHomePage());
+                    MainFrame.Navigate(new WarehouseHomePage(_currentUser));
                     break;
 
                 default:

@@ -2,6 +2,7 @@
 using LaptopShop.Repositories.Implementations;
 using LaptopShop.Repositories.Interfaces;
 using LaptopShop.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,17 +22,19 @@ namespace LaptopShop.Services.Implementations
 
         public void Add(Product product)
         {
-            throw new NotImplementedException();
+            _productRepository.Add(product);
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            _productRepository.Delete(id);
         }
+
+        
 
         public List<Product> GetAll()
         {
-            throw new NotImplementedException();
+           return _productRepository.GetAll();
         }
 
         public Product GetById(int id)
@@ -41,7 +44,20 @@ namespace LaptopShop.Services.Implementations
 
         public List<Product> Search(string keyword)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                return _productRepository.GetAll();
+            }else
+            {
+                return _productRepository.SearchAndFilter(keyword, null, 0, decimal.MaxValue);
+            }
+               
+            
+        }
+
+        public List<Product> SearchAndFilter(string keyword, string brand, decimal minPrice, decimal maxPrice)
+        {
+            return _productRepository.SearchAndFilter(keyword, brand, minPrice, maxPrice);
         }
 
         public void Update(Product product)

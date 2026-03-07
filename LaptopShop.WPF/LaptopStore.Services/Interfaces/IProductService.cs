@@ -15,5 +15,11 @@ namespace LaptopShop.Services.Interfaces
         void Add(Product product);
         void Update(Product product);
         void Delete(int id);
+       
+        
+
+       
+       
+        public List<Product> SearchAndFilter(string keyword,string brand ,  decimal minPrice, decimal maxPrice);
     }
 }

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using LaptopShop.Entities.Models;
 
 namespace LaptopShop.WPF.Frames
 {
@@ -20,9 +21,11 @@ namespace LaptopShop.WPF.Frames
     /// </summary>
     public partial class WarehouseHomePage : Page
     {
-        public WarehouseHomePage()
+        private User _user;
+        public WarehouseHomePage (User user)
         {
             InitializeComponent();
+            _user = user;
         }
     }
 }

@@ -33,12 +33,7 @@ namespace LaptopShop.Repositories.Implementations
             }
         }
 
-        public List<Product> FilterByPrice(decimal minPrice, decimal maxPrice)
-        {
-            return _context.Products
-                   .Where(p => p.BasePrice >= minPrice && p.BasePrice <= maxPrice)
-                   .ToList();
-        }
+       
 
         public List<Product> GetAll()
         {
@@ -50,10 +45,26 @@ namespace LaptopShop.Repositories.Implementations
             return _context.Products.FirstOrDefault(p => p.ProductId == id);
         }
 
-        public List<Product> SearchByName(string keyword)
+        public List<Product> SearchAndFilter(string keyword, string brand, decimal minPrice, decimal maxPrice)
         {
-            return _context.Products.Where(p => p.ProductName.Contains(keyword)).ToList();
+            var products = _context.Products.AsQueryable();
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                products = products.Where(p => p.ProductName.Contains(keyword));
+            }
+
+            if (!string.IsNullOrEmpty(brand))
+            {
+                products = products.Where(p => p.Brand == brand);
+            }
+
+            products = products.Where(p => p.BasePrice >= minPrice && p.BasePrice <= maxPrice);
+
+            return products.ToList();
         }
+
+
 
         public void Update(Product product)
         {

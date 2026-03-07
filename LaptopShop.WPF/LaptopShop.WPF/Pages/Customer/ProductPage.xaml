@@ -1,0 +1,246 @@
+﻿<Page x:Class="LaptopShop.WPF.Pages.Customer.ProductPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="#F8FAFC"
+      Title="ProductPage">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+
+        <Grid Margin="60,30,60,80">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- TITLE -->
+
+            <StackPanel Grid.Row="0" Margin="0,0,0,20">
+
+                <TextBlock Text="Product Catalog"
+                           FontSize="30"
+                           FontWeight="Bold"
+                           Foreground="#0f172a"/>
+
+                <TextBlock Text="Find the perfect tool for your craft."
+                           Foreground="#64748b"
+                           Margin="0,5,0,0"/>
+
+            </StackPanel>
+
+
+            <!-- SEARCH + FILTER -->
+
+            <Border Grid.Row="1"
+        Background="White"
+        CornerRadius="12"
+        Padding="15"
+        BorderBrush="#E2E8F0"
+        BorderThickness="1"
+        Margin="0,0,0,30"
+        HorizontalAlignment="Right">
+
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+
+                        <!-- SEARCH -->
+                        <ColumnDefinition Width="95"/>
+                        <ColumnDefinition Width="400"/>
+
+                        <!-- BRAND -->
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition Width="280"/>
+
+                        <!-- PRICE -->
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition Width="280"/>
+
+                        <!-- BUTTON -->
+                        <ColumnDefinition Width="200"/>
+
+                    </Grid.ColumnDefinitions>
+
+                    <!-- SEARCH LABEL -->
+
+                    <TextBlock Text="Name"
+                   VerticalAlignment="Center"
+                   FontSize="13"
+                   Foreground="#64748b"/>
+
+                    <!-- SEARCH BOX -->
+
+                    <TextBox x:Name="SearchBox"
+                 Grid.Column="1"
+                 Height="34"
+                 Padding="8"
+                 FontSize="13"
+                 VerticalContentAlignment="Center"
+                 BorderBrush="#E2E8F0"
+                 BorderThickness="1"/>
+
+
+                    <!-- BRAND LABEL -->
+
+                    <TextBlock Text="Brand"
+                   Grid.Column="2"
+                   VerticalAlignment="Center"
+                   FontSize="13"
+                   Foreground="#64748b"
+                   Margin="10,0,0,0"/>
+
+                    <!-- BRAND COMBOBOX -->
+
+                    <ComboBox x:Name="BrandFilterBox"
+                  Grid.Column="3"
+                  Height="34"
+                  FontSize="13"
+                  SelectedIndex="0"
+                  Margin="5,0">
+
+                        <ComboBoxItem Content="All Brands" Tag=""/>
+                        <ComboBoxItem Content="Apple" Tag="Apple"/>
+                        <ComboBoxItem Content="ASUS" Tag="ASUS"/>
+                        <ComboBoxItem Content="Dell" Tag="Dell"/>
+                        <ComboBoxItem Content="Razer" Tag="Razer"/>
+
+                    </ComboBox>
+
+
+                    <!-- PRICE LABEL -->
+
+                    <TextBlock Text="Price"
+                   Grid.Column="4"
+                   VerticalAlignment="Center"
+                   FontSize="13"
+                   Foreground="#64748b"
+                   Margin="10,0,0,0"/>
+
+                    <!-- PRICE COMBOBOX -->
+
+                    <ComboBox x:Name="PriceFilterBox"
+                  Grid.Column="5"
+                  Height="34"
+                  FontSize="13"
+                  SelectedIndex="0"
+                  Margin="5,0">
+
+                        <ComboBoxItem Content="All Prices" Tag="0-999999999"/>
+                        <ComboBoxItem Content="Under 10M" Tag="0-10000000"/>
+                        <ComboBoxItem Content="10M - 20M" Tag="10000000-20000000"/>
+                        <ComboBoxItem Content="20M - 30M" Tag="20000000-30000000"/>
+                        <ComboBoxItem Content="Above 30M" Tag="30000000-999999999"/>
+
+                    </ComboBox>
+
+
+                    <!-- SEARCH BUTTON -->
+
+                    <Button Grid.Column="6"
+                Content="Search"
+                Height="34"
+                Background="#6366f1"
+                Foreground="White"
+                FontSize="12"
+                FontWeight="Bold"
+                BorderThickness="0"
+                Cursor="Hand"
+                Click="Search_Click"/>
+
+                </Grid>
+
+            </Border>
+
+
+            <!-- PRODUCT GRID (GIỮ NGUYÊN) -->
+
+            <ItemsControl x:Name="ProductList"
+                          Grid.Row="2"
+                          ItemsSource="{Binding Products}">
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="3"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+
+                    <DataTemplate>
+
+                        <Border Margin="12"
+                                Background="White"
+                                CornerRadius="18"
+                                BorderBrush="#E2E8F0"
+                                BorderThickness="1">
+
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="20"
+                                                  ShadowDepth="3"
+                                                  Opacity="0.08"/>
+                            </Border.Effect>
+
+                            <StackPanel>
+
+                                <!-- IMAGE -->
+
+                                <Border Height="180"
+                                        CornerRadius="18,18,0,0">
+
+                                    <Border.Background>
+                                        <ImageBrush ImageSource="{Binding ImgUrl}"
+                                                    Stretch="UniformToFill"/>
+                                    </Border.Background>
+
+                                </Border>
+
+                                <!-- INFO -->
+
+                                <StackPanel Margin="18">
+
+                                    <TextBlock Text="{Binding Brand}"
+                                               FontSize="11"
+                                               Foreground="#94a3b8"
+                                               FontWeight="Bold"/>
+
+                                    <TextBlock Text="{Binding ProductName}"
+                                               FontSize="16"
+                                               FontWeight="Bold"
+                                               Margin="0,5,0,10"
+                                               Foreground="#0f172a"/>
+
+                                    <Grid>
+
+                                        <TextBlock Text="{Binding BasePrice,StringFormat={}{0:N0} VNĐ}"
+                                                   FontSize="16"
+                                                   FontWeight="Bold"
+                                                   Foreground="#6366f1"/>
+
+                                        <Button Content="Add to Card "
+                                                     HorizontalAlignment="Right"
+                                                     Background="#F1F5F9"
+                                                     BorderThickness="0"
+                                                     Padding="18,6"
+                                                     Cursor="Hand"
+                                                     FontWeight="SemiBold"/>
+
+                                    </Grid>
+
+                                </StackPanel>
+
+                            </StackPanel>
+
+                        </Border>
+
+                    </DataTemplate>
+
+                </ItemsControl.ItemTemplate>
+
+            </ItemsControl>
+
+        </Grid>
+
+    </ScrollViewer>
+
+</Page>

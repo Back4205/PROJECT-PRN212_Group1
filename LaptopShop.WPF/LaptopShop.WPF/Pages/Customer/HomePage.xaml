@@ -1,14 +1,202 @@
 ﻿<Page x:Class="LaptopShop.WPF.Pages.Customer.HomePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:LaptopShop.WPF.Pages.Customer"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      Background="White"
       Title="HomePage">
 
-    <Grid>
-        
-    </Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" >
+
+        <Grid Margin="60,30,60,100">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+
+            <!-- ================= BANNER ================= -->
+
+            <Border Grid.Row="0"
+                    Height="450"
+                    CornerRadius="25"
+                    Margin="0,0,0,60"
+                    ClipToBounds="True">
+
+                <Border.Background>
+                    <ImageBrush ImageSource="/Images/Banner.jpg"
+                                Stretch="UniformToFill"/>
+                </Border.Background>
+
+                <!-- Overlay -->
+                <Grid Background="#66000000">
+
+                    <StackPanel VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                MaxWidth="700"
+                                TextBlock.TextAlignment="Center">
+
+                        <!-- Tag -->
+
+                        <Border Background="#30FFFFFF"
+                                CornerRadius="12"
+                                Padding="12,4"
+                                HorizontalAlignment="Center">
+
+                            <TextBlock Text="⚡ NEW ARRIVALS - 2026"
+                                       Foreground="White"
+                                       FontSize="11"
+                                       FontWeight="Bold"/>
+
+                        </Border>
+
+
+                        <!-- Title -->
+
+                        <TextBlock Text="Elevate Your Workflow"
+                                   FontSize="52"
+                                   FontWeight="ExtraBold"
+                                   Foreground="White"
+                                   Margin="0,20,0,10"
+                                   TextWrapping="Wrap"/>
+
+
+                        <!-- Description -->
+
+                        <TextBlock Text="At LaptopPro, we introduce the next generation of performance."
+                                   Foreground="#E2E8F0"
+                                   FontSize="16"
+                                   Margin="0,0,0,35"
+                                   TextWrapping="Wrap"/>
+
+
+                        <!-- Button -->
+
+                        <Button x:Name="BtnshopOutProducts" Content="Shop Our Products →"
+                                Padding="30,14"
+                                Background="#6366f1"
+                                Foreground="White"
+                                FontWeight="Bold"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                HorizontalAlignment="Center"
+                                Width="220" Click="BtnshopOutProducts_Click"/>
+
+                    </StackPanel>
+
+                </Grid>
+
+            </Border>
+
+
+            <!-- ================= PRODUCTS ================= -->
+
+            <StackPanel Grid.Row="1">
+
+                <TextBlock Text="Featured Models"
+                           FontSize="30"
+                           FontWeight="Bold"
+                           Foreground="#0f172a"/>
+
+                <TextBlock Text="Discover our top-performing laptops."
+                           Foreground="#64748b"
+                           Margin="0,6,0,30"/>
+
+
+                <!-- PRODUCT GRID -->
+
+                <ItemsControl ItemsSource="{Binding FeaturedProducts}">
+
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+
+                    <ItemsControl.ItemTemplate>
+
+                        <DataTemplate>
+
+                            <Border Margin="12"
+                                    Background="White"
+                                    CornerRadius="18"
+                                    BorderBrush="#F1F5F9"
+                                    BorderThickness="1">
+
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="18"
+                                                      ShadowDepth="3"
+                                                      Opacity="0.08"/>
+                                </Border.Effect>
+
+
+                                <StackPanel>
+
+                                    <!-- IMAGE -->
+
+                                    <Border Height="210"
+                                            CornerRadius="18,18,0,0"
+                                            ClipToBounds="True">
+
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="{Binding ImgUrl}"
+                                                        Stretch="UniformToFill"/>
+                                        </Border.Background>
+
+                                    </Border>
+
+
+                                    <!-- INFO -->
+
+                                    <StackPanel Margin="20">
+
+                                        <TextBlock Text="{Binding ProductName}"
+                                                   FontSize="18"
+                                                   FontWeight="Bold"
+                                                   Foreground="#0f172a"
+                                                   TextWrapping="Wrap"/>
+
+
+                                        <TextBlock Text="{Binding Brand}"
+                                                   Foreground="#64748b"
+                                                   Margin="0,6,0,0"/>
+
+
+                                        <Grid Margin="0,15,0,0">
+
+                                            <TextBlock Text="{Binding BasePrice, StringFormat={}{0:N0} VNĐ}"
+                                                       FontSize="18"
+                                                       FontWeight="Bold"
+                                                       Foreground="#6366f1"
+                                                       VerticalAlignment="Center"/>
+
+
+                                            <Button Content="Add to Card "
+                                                    HorizontalAlignment="Right"
+                                                    Background="#F1F5F9"
+                                                    BorderThickness="0"
+                                                    Padding="18,6"
+                                                    Cursor="Hand"
+                                                    FontWeight="SemiBold"/>
+
+                                        </Grid>
+
+                                    </StackPanel>
+
+                                </StackPanel>
+
+                            </Border>
+
+                        </DataTemplate>
+
+                    </ItemsControl.ItemTemplate>
+
+                </ItemsControl>
+
+            </StackPanel>
+
+        </Grid>
+
+    </ScrollViewer>
+
 </Page>

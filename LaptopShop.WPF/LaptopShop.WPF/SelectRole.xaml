@@ -1,7 +1,7 @@
 ﻿<Window x:Class="LaptopShop.WPF.SelectRole"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Chọn vai trò"
+        Title="Chọn Role"
         Height="350"
         Width="500"
         WindowStartupLocation="CenterScreen"
