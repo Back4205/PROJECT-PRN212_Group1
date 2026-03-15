@@ -20,4 +20,15 @@ public partial class Order
     public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
     public virtual Shipment? Shipment { get; set; }
+    public decimal TotalAmountOrder 
+    {
+        get
+        {
+           
+            if (OrderItems == null) return 0;
+
+          
+            return OrderItems.Sum(item => item.SnapshotPrice);
+        }
+    }
 }

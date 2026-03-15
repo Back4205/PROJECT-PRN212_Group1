@@ -20,6 +20,7 @@ namespace LaptopShop.Repositories.Implementations
         {
            _context.Users.Add(user);
             _context.SaveChanges();
+            AddCustomer(user.UserId);
         }
 
         public void AddCustomer(int userId)
@@ -27,7 +28,7 @@ namespace LaptopShop.Repositories.Implementations
             var customer = new Customer
             {
                 UserId = userId,
-                Address = "Chưa cập nhật"
+                Address = "Unknown"
             };
 
             _context.Customers.Add(customer);
@@ -102,6 +103,11 @@ namespace LaptopShop.Repositories.Implementations
                 _context.Entry(existingUser).CurrentValues.SetValues(user);
                 _context.SaveChanges();
             }
+        }
+        public Customer GetCustomerByUserId(int userId)
+        {
+          
+            return _context.Customers.FirstOrDefault(c => c.UserId == userId);
         }
     }
 

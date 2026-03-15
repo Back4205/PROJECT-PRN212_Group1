@@ -62,7 +62,7 @@
 
                         <!-- Description -->
 
-                        <TextBlock Text="At LaptopPro, we introduce the next generation of performance."
+                        <TextBlock Text="At LaptopShop, we introduce the next generation of performance."
                                    Foreground="#E2E8F0"
                                    FontSize="16"
                                    Margin="0,0,0,35"
@@ -171,13 +171,13 @@
                                                        VerticalAlignment="Center"/>
 
 
-                                            <Button Content="Add to Card "
+                                            <Button x:Name="btnAddToCart" Content="Add to Card "
                                                     HorizontalAlignment="Right"
                                                     Background="#F1F5F9"
                                                     BorderThickness="0"
                                                     Padding="18,6"
                                                     Cursor="Hand"
-                                                    FontWeight="SemiBold"/>
+                                                    FontWeight="SemiBold" Click="btnAddToCart_Click"/>
 
                                         </Grid>
 

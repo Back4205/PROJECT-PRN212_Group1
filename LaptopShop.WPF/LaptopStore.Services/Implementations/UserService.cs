@@ -2,6 +2,7 @@
 using LaptopShop.Repositories.Implementations;
 using LaptopShop.Repositories.Interfaces;
 using LaptopShop.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,5 +64,12 @@ namespace LaptopShop.Services.Implementations
             _userRepository.Add(user);
             _userRepository.AddUserRole(user.UserId, 4);
         }
+
+        public Customer GetCustomerByUserId(int userId)
+        {
+
+            return _userRepository.GetCustomerByUserId(userId);
+        }
+
     }
 }

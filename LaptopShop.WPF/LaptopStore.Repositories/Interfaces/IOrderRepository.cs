@@ -11,8 +11,10 @@ namespace LaptopShop.Repositories.Interfaces
     {
         List<Order> GetAll();
         Order GetById(int id);
-        void Add(Order order);
+        void Add(Order order, List<OrderItem> Items);
         void Update(Order order);
         void Delete(int id);
+        void UpdateStatus(int orderId, string status);
+        List<Order> GetAllProductByCustomerID(int id);
     }
 }

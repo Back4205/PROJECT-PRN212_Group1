@@ -1,4 +1,5 @@
 ﻿using LaptopShop.Entities.Models;
+using LaptopShop.Repositories.Implementations;
 using LaptopShop.Services.Implementations;
 using System;
 using System.Collections.Generic;
@@ -78,6 +79,26 @@ namespace LaptopShop.WPF.Pages.Customer
             // Gọi đúng 4 tham số như Service đã định nghĩa
             var result = _productService.SearchAndFilter(keyword, brand, minPrice, maxPrice);
             ProductList.ItemsSource = result;
+        }
+
+        private void btnGoToCart_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Button btn = sender as Button;
+                Product product = btn.DataContext as Product;
+
+                CartService cartService = new CartService(new CartRepository(), new UserRepository());
+
+                cartService.AddToCart(_user.UserId, product.ProductId, 1);
+
+                MessageBox.Show("Added to cart!");
+                this.NavigationService.Navigate(new CartPage(_user));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
         }
     }
 }

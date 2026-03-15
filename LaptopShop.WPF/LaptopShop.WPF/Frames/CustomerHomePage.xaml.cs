@@ -27,11 +27,12 @@ namespace LaptopShop.WPF.Frames
         public CustomerHomePage( User user)
         {
             InitializeComponent();
-            MainContentFrame.Navigate(new LaptopShop.WPF.Pages.Customer.HomePage(_user));
             _user = user;
+            MainContentFrame.Navigate(new LaptopShop.WPF.Pages.Customer.HomePage(_user));
+            
             this.DataContext = _user;
 
-            MainContentFrame.Navigate(new LaptopShop.WPF.Pages.Customer.HomePage(_user));
+            //MainContentFrame.Navigate(new LaptopShop.WPF.Pages.Customer.HomePage(_user));
 
             // lấy ký tự đầu làm avata 
             if (_user != null)
@@ -55,6 +56,16 @@ namespace LaptopShop.WPF.Frames
         private void NavProduct_Click(object sender, RoutedEventArgs e)
         {
             MainContentFrame.Navigate(new LaptopShop.WPF.Pages.Customer.ProductPage(_user));
+        }
+
+        private void NavOrder_Click(object sender, RoutedEventArgs e)
+        {
+            MainContentFrame.Navigate(new LaptopShop.WPF.Pages.Customer.OrderPage(_user));
+        }
+
+        private void btnGoToCart_Click(object sender, RoutedEventArgs e)
+        {
+            MainContentFrame.Navigate(new LaptopShop.WPF.Pages.Customer.CartPage(_user));
         }
     }
 }

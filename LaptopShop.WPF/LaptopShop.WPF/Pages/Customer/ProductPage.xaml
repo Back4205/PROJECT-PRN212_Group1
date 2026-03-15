@@ -217,13 +217,13 @@
                                                    FontWeight="Bold"
                                                    Foreground="#6366f1"/>
 
-                                        <Button Content="Add to Card "
+                                        <Button x:Name="btnGoToCart" Content="Add to Card "
                                                      HorizontalAlignment="Right"
                                                      Background="#F1F5F9"
                                                      BorderThickness="0"
                                                      Padding="18,6"
                                                      Cursor="Hand"
-                                                     FontWeight="SemiBold"/>
+                                                     FontWeight="SemiBold" Click="btnGoToCart_Click"/>
 
                                     </Grid>
 

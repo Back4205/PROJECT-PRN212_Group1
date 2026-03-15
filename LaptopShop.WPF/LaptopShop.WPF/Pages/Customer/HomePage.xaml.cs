@@ -17,6 +17,7 @@ using LaptopShop.Entities.Models;
 using LaptopShop.Services.Implementations;
 using System.Windows.Controls;
 using LaptopShop.WPF.Frames;
+using LaptopShop.Repositories.Implementations;
 namespace LaptopShop.WPF.Pages.Customer
 {
     /// <summary>
@@ -31,7 +32,6 @@ namespace LaptopShop.WPF.Pages.Customer
         {
             InitializeComponent();
             _productService = new ProductService();
-           
             _user = user;
             LoadData();
         }
@@ -53,7 +53,25 @@ namespace LaptopShop.WPF.Pages.Customer
             }
         }
 
-       
+        private void btnAddToCart_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Button btn = sender as Button;
+                Product product = btn.DataContext as Product;
+
+                CartService cartService = new CartService(new CartRepository(), new UserRepository());
+
+                cartService.AddToCart(_user.UserId, product.ProductId, 1);
+
+                MessageBox.Show("Added to cart!");
+                this.NavigationService.Navigate(new CartPage(_user));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
     }
     
 }
