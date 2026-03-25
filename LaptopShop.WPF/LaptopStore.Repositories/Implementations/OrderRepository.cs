@@ -19,34 +19,65 @@ namespace LaptopShop.Repositories.Implementations
         public void Add(Order order, List<OrderItem> items)
         {
             using var transaction = _context.Database.BeginTransaction();
-
             try
             {
-                // 1. Lưu Order trước để lấy OrderID
                 _context.Orders.Add(order);
                 _context.SaveChanges();
 
-                // 2. Thêm OrderItems
-                foreach (var item in items)
-                {
-                    item.OrderId = order.OrderId;
+                var groupedItems = items.GroupBy(i => i.ProductId);
 
-                    var product = _context.Products.FirstOrDefault(p => p.ProductId == item.ProductId);
+                foreach (var group in groupedItems)
+                {
+                    int productId = group.Key;
+                    int quantity = group.Count();
+
+                    // ✅ DEBUG: kiểm tra giá trị thực tế
+                    System.Diagnostics.Debug.WriteLine($"ProductId={productId}, Quantity={quantity}");
+
+                    var product = _context.Products
+                        .FirstOrDefault(p => p.ProductId == productId);
+
                     if (product == null)
                         throw new Exception("Product not found.");
 
-                    // Snapshot thông tin product
-                    item.SnapshotProductName = product.ProductName;
-                    item.SnapshotPrice = product.BasePrice;
+                    // ✅ Tắt tracking cache để tránh stale data
+                    var productItems = _context.ProductItems
+                        .AsNoTracking()
+                        .Where(pi => pi.ProductId == productId && pi.Status == "InStock")
+                        .Take(quantity)
+                        .ToList();
 
-                    _context.OrderItems.Add(item);
+                    // ✅ DEBUG
+                    System.Diagnostics.Debug.WriteLine($"Found {productItems.Count} items InStock for ProductId={productId}");
+
+                    if (productItems.Count < quantity)
+                        throw new Exception($"Không đủ hàng cho {product.ProductName}");
+
+                    int index = 0;
+                    foreach (var item in group)
+                    {
+                        var pi = _context.ProductItems  // ✅ Load lại với tracking để update
+                            .FirstOrDefault(x => x.ProductItemId == productItems[index].ProductItemId);
+
+                        index++;
+                        pi.Status = "Sold";
+
+                        item.OrderId = order.OrderId;
+                        item.ProductItemId = pi.ProductItemId;
+                        item.SnapshotProductName = product.ProductName;
+                        item.SnapshotPrice = product.BasePrice;
+
+                        _context.OrderItems.Add(item);
+                    }
                 }
 
                 _context.SaveChanges();
                 transaction.Commit();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                // ✅ DEBUG: xem lỗi thật sự
+                System.Diagnostics.Debug.WriteLine($"ERROR: {ex.Message}\n{ex.StackTrace}");
                 transaction.Rollback();
                 throw;
             }
@@ -73,11 +104,13 @@ namespace LaptopShop.Repositories.Implementations
         public List<Order> GetAllProductByCustomerID(int customerId)
         {
             return _context.Orders
-           .Where(o => o.CustomerId == customerId)
-           .Include(o => o.OrderItems)
-           .ThenInclude(oi => oi.Product)
-           .OrderByDescending(o => o.OrderDate)
-           .ToList();
+                .Where(o => o.CustomerId == customerId)
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Product)
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.ProductItem)  // ✅ Thêm dòng này
+                .OrderByDescending(o => o.OrderDate)
+                .ToList();
         }
 
         public void Update(Order order)
@@ -113,18 +146,39 @@ namespace LaptopShop.Repositories.Implementations
 
         public bool CancelOrder(int orderId)
         {
-            var order = _context.Orders.FirstOrDefault(o => o.OrderId == orderId);
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var order = _context.Orders
+                    .Include(o => o.OrderItems)
+                    .FirstOrDefault(o => o.OrderId == orderId);
 
-            if (order == null)
-                return false;
+                if (order == null) return false;
+                if (order.Status != "Pending") return false;
 
-            if (order.Status != "Pending")
-                return false;
+                // ✅ Nhả ProductItem về InStock
+                foreach (var item in order.OrderItems)
+                {
+                    if (item.ProductItemId != null)
+                    {
+                        var productItem = _context.ProductItems
+                            .FirstOrDefault(pi => pi.ProductItemId == item.ProductItemId);
 
-            order.Status = "Cancelled";
-            _context.SaveChanges();
+                        if (productItem != null)
+                            productItem.Status = "InStock";
+                    }
+                }
 
-            return true;
+                order.Status = "Cancelled";
+                _context.SaveChanges();
+                transaction.Commit();
+                return true;
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
     }
 }

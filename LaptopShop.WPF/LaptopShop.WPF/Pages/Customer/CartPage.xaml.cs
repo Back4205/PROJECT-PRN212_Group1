@@ -87,6 +87,7 @@ namespace LaptopShop.WPF.Pages.Customer
         // 4. Xử lý Đặt hàng (ORDER NOW)
         private void btnPlaceOrder_Click(object sender, RoutedEventArgs e)
         {
+            LoadCartData();
             if (_currentCart == null || !_currentCart.CartItems.Any())
             {
                 MessageBox.Show("Giỏ hàng của bạn đang trống!");
@@ -113,6 +114,7 @@ namespace LaptopShop.WPF.Pages.Customer
                 {
                     MessageBox.Show("Có lỗi xảy ra khi đặt hàng: " + ex.Message);
                 }
+                LoadCartData();
             }
         }
         private void BtnIncrease_Click(object sender, RoutedEventArgs e)
@@ -120,14 +122,25 @@ namespace LaptopShop.WPF.Pages.Customer
             Button btn = sender as Button;
             CartItem item = btn.DataContext as CartItem;
 
-            item.Quantity++;
-
+            // ✅ Kiểm tra tồn kho trước khi tăng
             CartRepository repo = new CartRepository();
+            int inStock = repo.GetStockCount(item.ProductId);
+
+            if (item.Quantity >= inStock)
+            {
+                MessageBox.Show($"Chỉ còn {inStock} sản phẩm trong kho!", "Thông báo",
+                                MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            item.Quantity++;
             repo.UpdateQuantity(item.CartItemId, item.Quantity);
 
             dgCart.Items.Refresh();
             UpdateTotalAmount();
+            LoadCartData();
         }
+
         private void BtnDecrease_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
@@ -145,9 +158,10 @@ namespace LaptopShop.WPF.Pages.Customer
             }
             else
             {
-                
-                MessageBox.Show("Quantity cannot be less than 1!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Quantity cannot be less than 1!", "Error",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            LoadCartData();
         }
 
         private void btnContinue_Click(object sender, RoutedEventArgs e)

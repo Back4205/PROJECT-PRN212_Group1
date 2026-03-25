@@ -50,7 +50,7 @@ namespace LaptopShop.Repositories.Implementations
 
         public Cart GetCartByCustomerId(int customerId)
         {
-            var cart = context.Carts
+            var cart = context.Carts.AsNoTracking()
                  .Include(c => c.CartItems)
                  .ThenInclude(ci => ci.Product) // Load luôn thông tin sản phẩm để hiển thị
                  .FirstOrDefault(c => c.CustomerId == customerId);
@@ -86,6 +86,11 @@ namespace LaptopShop.Repositories.Implementations
                 item.Quantity = quantity;
                 context.SaveChanges();
             }
+        }
+        public int GetStockCount(int productId)
+        {
+            return context.ProductItems
+                .Count(pi => pi.ProductId == productId && pi.Status == "InStock");
         }
     }
 }
