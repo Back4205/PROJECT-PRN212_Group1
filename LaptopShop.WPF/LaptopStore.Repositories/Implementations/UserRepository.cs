@@ -1,5 +1,6 @@
 ﻿using LaptopShop.Entities.Models;
 using LaptopShop.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -109,8 +110,18 @@ namespace LaptopShop.Repositories.Implementations
           
             return _context.Customers.FirstOrDefault(c => c.UserId == userId);
         }
+        // Trong UserRepository.cs
+        public void UpdateCustomer(Customer customer)
+        {
+            var existing = _context.Customers.FirstOrDefault(c => c.CustomerId == customer.CustomerId);
+            if (existing != null)
+            {
+                _context.Entry(existing).CurrentValues.SetValues(customer);
+                _context.SaveChanges();
+            }
+        }
     }
 
-       
-    
+   
+
 }

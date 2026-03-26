@@ -31,7 +31,7 @@ namespace LaptopShop.Repositories.Implementations
                     int productId = group.Key;
                     int quantity = group.Count();
 
-                    // ✅ DEBUG: kiểm tra giá trị thực tế
+                    //  DEBUG: kiểm tra giá trị thực tế
                     System.Diagnostics.Debug.WriteLine($"ProductId={productId}, Quantity={quantity}");
 
                     var product = _context.Products
@@ -40,15 +40,14 @@ namespace LaptopShop.Repositories.Implementations
                     if (product == null)
                         throw new Exception("Product not found.");
 
-                    // ✅ Tắt tracking cache để tránh stale data
+                    //  Tắt tracking cache để tránh stale data
                     var productItems = _context.ProductItems
                         .AsNoTracking()
                         .Where(pi => pi.ProductId == productId && pi.Status == "InStock")
                         .Take(quantity)
                         .ToList();
 
-                    // ✅ DEBUG
-                    System.Diagnostics.Debug.WriteLine($"Found {productItems.Count} items InStock for ProductId={productId}");
+                  
 
                     if (productItems.Count < quantity)
                         throw new Exception($"Không đủ hàng cho {product.ProductName}");
@@ -60,7 +59,7 @@ namespace LaptopShop.Repositories.Implementations
                             .FirstOrDefault(x => x.ProductItemId == productItems[index].ProductItemId);
 
                         index++;
-                        pi.Status = "Sold";
+                        pi.Status = "Allocated";
 
                         item.OrderId = order.OrderId;
                         item.ProductItemId = pi.ProductItemId;
@@ -76,7 +75,7 @@ namespace LaptopShop.Repositories.Implementations
             }
             catch (Exception ex)
             {
-                // ✅ DEBUG: xem lỗi thật sự
+                // DEBUG: xem lỗi thật sự
                 System.Diagnostics.Debug.WriteLine($"ERROR: {ex.Message}\n{ex.StackTrace}");
                 transaction.Rollback();
                 throw;
@@ -87,7 +86,9 @@ namespace LaptopShop.Repositories.Implementations
         {
             return _context.Orders
                 .Include(o => o.Customer)
+                    .ThenInclude(c => c.User)
                 .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.ProductItem) 
                 .OrderByDescending(o => o.OrderDate)
                 .ToList();
         }
@@ -108,7 +109,7 @@ namespace LaptopShop.Repositories.Implementations
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.Product)
                 .Include(o => o.OrderItems)
-                    .ThenInclude(oi => oi.ProductItem)  // ✅ Thêm dòng này
+                    .ThenInclude(oi => oi.ProductItem)  //  Thêm dòng này
                 .OrderByDescending(o => o.OrderDate)
                 .ToList();
         }
@@ -156,7 +157,7 @@ namespace LaptopShop.Repositories.Implementations
                 if (order == null) return false;
                 if (order.Status != "Pending") return false;
 
-                // ✅ Nhả ProductItem về InStock
+                //  Nhả ProductItem về InStock
                 foreach (var item in order.OrderItems)
                 {
                     if (item.ProductItemId != null)

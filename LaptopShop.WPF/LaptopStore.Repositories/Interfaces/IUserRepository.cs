@@ -24,5 +24,6 @@ namespace LaptopShop.Repositories.Interfaces
         void Delete(int id);
         List<Role> GetRolesByUserId(int userId);
         Customer GetCustomerByUserId(int userId);
+        void UpdateCustomer(Customer customer);
     }
 }

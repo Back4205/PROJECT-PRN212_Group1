@@ -16,5 +16,6 @@ namespace LaptopShop.Repositories.Interfaces
         void Delete(int id);
         void UpdateStatus(int orderId, string status);
         List<Order> GetAllProductByCustomerID(int id);
+        bool CancelOrder(int orderId);
     }
 }

@@ -15,5 +15,8 @@ namespace LaptopShop.Services.Interfaces
 
         bool IsEmailExists(string email);
         List<Role> GetRolesByUserId(int userId);
+        User GetUserById(int id);
+        void UpdateUserProfile(User user, string newPassword, string address = null);
+        Customer GetCustomerByUserId(int userId);
     }
 }
