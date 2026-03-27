@@ -3,6 +3,7 @@ using LaptopShop.Repositories.Implementations;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace LaptopShop.WPF.Frames
 {
@@ -56,6 +57,54 @@ namespace LaptopShop.WPF.Frames
             else
             {
                 MessageBox.Show("Vui lòng chọn một kho hàng!");
+            }
+        }
+        private void Avatar_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            AvatarMenu.IsOpen = true; // Mở menu khi click vào avatar
+        }
+
+        private void MenuUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            // 1. Khởi tạo màn hình UpdateInformation và truyền UserId vào
+            UpdateInformation updateWin = new UpdateInformation(_user.UserId);
+
+            // 2. Hiển thị màn hình UpdateInformation (dùng Show thay vì ShowDialog)
+            updateWin.Show();
+
+            // 3. Tìm Window đang chứa Page CustomerHomePage này
+            Window parentWindow = Window.GetWindow(this);
+
+            // 4. Đóng Window cha đó lại
+            if (parentWindow != null)
+            {
+                parentWindow.Close();
+            }
+        }
+
+        // Xử lý nút Logout trong Menu
+        private void MenuLogout_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn đăng xuất?", "Xác nhận",
+                                                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                // 1. Khởi tạo màn hình Login (Tên class của bạn là Login)
+                // Lưu ý: Kiểm tra namespace nếu cần (vd: LaptopShop.WPF.Login)
+                Login loginWindow = new Login();
+
+                // 2. Hiển thị màn hình Login lên
+                loginWindow.Show();
+
+                // 3. Tìm Window đang chứa Page hiện tại (CustomerHomePage)
+                Window parentWindow = Window.GetWindow(this);
+
+                // 4. Đóng cửa sổ trang chủ (MainWindow) lại
+                if (parentWindow != null)
+                {
+                    parentWindow.Close();
+                }
             }
         }
     }
