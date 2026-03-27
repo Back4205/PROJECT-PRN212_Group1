@@ -149,13 +149,13 @@ namespace LaptopShop.WPF.Pages.Staff
                 if (MessageBox.Show($"Bạn có chắc muốn HỦY đơn hàng #{order.OrderId}? Sản phẩm sẽ được trả lại kho.",
                                     "Cảnh báo", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
-                    bool success = _orderService.CancelOrder(order.OrderId);
-                    if (success)
-                    {
-                        MessageBox.Show("Đã hủy đơn hàng và hoàn trả kho thành công!");
-                        LoadOrders();
-                    }
-                    else MessageBox.Show("Hủy đơn hàng thất bại!");
+                    //bool success = _orderService.CancelOrder(order.OrderId);
+                    //if (success)
+                    //{
+                    //    MessageBox.Show("Đã hủy đơn hàng và hoàn trả kho thành công!");
+                    //    LoadOrders();
+                    //}
+                    //else MessageBox.Show("Hủy đơn hàng thất bại!");
                 }
             }
         }

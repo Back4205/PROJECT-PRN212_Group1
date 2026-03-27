@@ -58,12 +58,12 @@ namespace LaptopShop.WPF.Frames
             }
         }
 
-        private void MenuUpdate_Click(object sender, RoutedEventArgs e)
-        {
-            UpdateInformation updateWin = new UpdateInformation(_user.UserId);
-            updateWin.Show();
-            Window.GetWindow(this)?.Close();
-        }
+        //private void MenuUpdate_Click(object sender, RoutedEventArgs e)
+        //{
+        //    UpdateInformation updateWin = new UpdateInformation(_user.UserId);
+        //    updateWin.Show();
+        //    Window.GetWindow(this)?.Close();
+        //}
 
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
