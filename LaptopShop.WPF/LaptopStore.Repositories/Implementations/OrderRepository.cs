@@ -194,29 +194,64 @@ namespace LaptopShop.Repositories.Implementations
         }
         public void CompleteOrderExport(int orderId)
         {
-            var order = _context.Orders
-                .Include(o => o.OrderItems)
-                .FirstOrDefault(o => o.OrderId == orderId);
-
-            if (order == null) throw new Exception("Không tìm thấy đơn hàng.");
-
-            foreach (var item in order.OrderItems)
+            using var transaction = _context.Database.BeginTransaction();
+            try
             {
-                // Kiểm tra đúng tên thuộc tính trong class OrderItem (thử Id thay vì ID)
-                if (item.ProductItemId.HasValue)
-                {
-                    var pItem = _context.ProductItems
-                        .FirstOrDefault(pi => pi.ProductItemId == item.ProductItemId.Value);
+                // Load Order kèm theo thông tin Customer để lấy địa chỉ giao hàng
+                var order = _context.Orders
+                    .Include(o => o.OrderItems)
+                    .Include(o => o.Customer)
+                    .FirstOrDefault(o => o.OrderId == orderId);
 
-                    if (pItem != null)
+                if (order == null) throw new Exception("Không tìm thấy đơn hàng.");
+
+                // 1. Cập nhật trạng thái từng thiết bị (ProductItem) thành 'Sold'
+                foreach (var item in order.OrderItems)
+                {
+                    if (item.ProductItemId.HasValue)
                     {
-                        pItem.Status = "Sold";
-                        _context.Entry(pItem).State = EntityState.Modified;
+                        var pItem = _context.ProductItems
+                            .FirstOrDefault(pi => pi.ProductItemId == item.ProductItemId.Value);
+
+                        if (pItem != null)
+                        {
+                            pItem.Status = "Sold";
+                        }
                     }
                 }
+
+                // 2. Cập nhật trạng thái đơn hàng
+                order.Status = "Completed";
+
+                // 3. TẠO BẢN GHI SHIPMENT MỚI
+                var existingShipment = _context.Shipments.FirstOrDefault(s => s.OrderId == orderId);
+
+                if (existingShipment == null)
+                {
+                    var shipment = new Shipment
+                    {
+                        OrderId = orderId,
+                        ShipDate = DateTime.Now,
+                        // BỎ chữ N phía trước chuỗi. C# tự hiểu Unicode nếu file code là UTF-8
+                        ShipAddress = order.Customer?.Address ?? "Địa chỉ chưa xác định",
+                        Status = "Preparing"
+                    };
+                    _context.Shipments.Add(shipment);
+                }
+                else
+                {
+                    existingShipment.ShipDate = DateTime.Now;
+                    existingShipment.Status = "Preparing";
+                }
+
+                _context.SaveChanges();
+                transaction.Commit();
             }
-            order.Status = "Completed";
-            _context.SaveChanges();
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                throw new Exception("Lỗi hệ thống khi xuất kho: " + ex.Message);
+            }
         }
         // Trong OrderRepository.cs
         public dynamic GetReturnedCancelledOrders()

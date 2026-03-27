@@ -58,5 +58,29 @@ namespace LaptopShop.WPF.Frames
                 MessageBox.Show("Vui lòng chọn một kho hàng!");
             }
         }
+        private void MenuLogout_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn đăng xuất?", "Xác nhận",
+                                                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                // 1. Khởi tạo màn hình Login (Tên class của bạn là Login)
+                // Lưu ý: Kiểm tra namespace nếu cần (vd: LaptopShop.WPF.Login)
+                Login loginWindow = new Login();
+
+                // 2. Hiển thị màn hình Login lên
+                loginWindow.Show();
+
+                // 3. Tìm Window đang chứa Page hiện tại (CustomerHomePage)
+                Window parentWindow = Window.GetWindow(this);
+
+                // 4. Đóng cửa sổ trang chủ (MainWindow) lại
+                if (parentWindow != null)
+                {
+                    parentWindow.Close();
+                }
+            }
+        }
     }
 }

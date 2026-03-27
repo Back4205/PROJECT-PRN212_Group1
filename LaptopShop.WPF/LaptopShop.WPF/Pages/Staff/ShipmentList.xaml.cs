@@ -113,56 +113,37 @@ namespace LaptopShop.WPF.Pages.Staff
         private void btnReturn_Click(object sender, RoutedEventArgs e)
         {
             var s = (sender as Button)?.DataContext as Shipment;
+            if (s == null) return;
 
-            // Nếu đã Delivered hoặc đang Shipping thì mới cho phép Trả hàng
-            if (s != null && (s.Status == "Shipping" || s.Status == "Delivered"))
+            if (s.Status == "Shipping" || s.Status == "Delivered")
             {
-                if (MessageBox.Show("Giao hàng không thành công? Máy sẽ được hoàn lại kho (InStock) và đơn sẽ bị Hủy.",
-                    "Trả hàng", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                if (MessageBox.Show("Xác nhận hoàn đơn hàng này? Đơn hàng sẽ chuyển sang trạng thái 'Chờ nhập kho'.",
+                    "Thông báo", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    using (var transaction = _context.Database.BeginTransaction())
+                    try
                     {
-                        try
-                        {
-                            // 1. Cập nhật Shipment
-                            s.Status = "Returned";
+                        using var transaction = _context.Database.BeginTransaction();
 
-                            // 2. Cập nhật Order
-                            var order = _context.Orders.FirstOrDefault(o => o.OrderId == s.OrderId);
-                            if (order != null) order.Status = "Cancelled";
+                        // 1. Cập nhật Shipment sang Returned (để đánh dấu là hàng đang quay đầu)
+                        s.Status = "Returned";
 
-                            // 3. Hoàn kho ProductItems
-                            var items = _context.OrderItems.Where(oi => oi.OrderId == s.OrderId).ToList();
-                            foreach (var item in items)
-                            {
-                                if (item.ProductItemId != null)
-                                {
-                                    var pItem = _context.ProductItems.Find(item.ProductItemId);
-                                    if (pItem != null) pItem.Status = "InStock";
-                                }
-                            }
+                        // 2. Cập nhật Order sang Cancelled
+                        var order = _context.Orders.FirstOrDefault(o => o.OrderId == s.OrderId);
+                        if (order != null) order.Status = "Cancelled";
 
-                            _context.SaveChanges();
-                            transaction.Commit();
+                        _context.SaveChanges();
+                        transaction.Commit();
 
-                            MessageBox.Show("Đã trả hàng và hoàn kho thành công!", "Thông báo");
-                            LoadShipments(); // Nạp lại toàn bộ để cập nhật UI
-                        }
-                        catch (Exception ex)
-                        {
-                            transaction.Rollback();
-                            MessageBox.Show("Lỗi: " + ex.Message);
-                        }
+                        MessageBox.Show("Đã xác nhận hoàn hàng thành công! Đơn hàng này sẽ được chuyển về danh sách chờ nhân viên kho xác nhận nhập kho lại.",
+                                        "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                        LoadShipments(); // Refresh lại danh sách vận chuyển
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi: " + ex.Message);
                     }
                 }
-            }
-            else if (s != null && s.Status == "Returned")
-            {
-                MessageBox.Show("Đơn hàng này đã ở trạng thái Trả hàng rồi.");
-            }
-            else
-            {
-                MessageBox.Show("Chỉ có thể trả hàng khi đơn đang 'Shipping' hoặc 'Delivered'.");
             }
         }
 

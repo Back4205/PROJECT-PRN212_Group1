@@ -1,23 +1,158 @@
 ﻿<Page x:Class="LaptopShop.WPF.Frames.WarehouseHomePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      Title="Warehouse Manager">
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d"
+      Title="WarehouseHomePage"
+      Background="White">
 
-    <Grid Background="#F4F4F4">
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="400">
-            <TextBlock Text="CHỌN KHO QUẢN LÝ" FontSize="24" FontWeight="Bold" 
-                       HorizontalAlignment="Center" Margin="0,0,0,20"/>
 
-            <TextBlock Text="Danh sách kho của bạn:" Margin="0,0,0,5"/>
-            <ComboBox x:Name="cbWarehouses" Height="35" 
-                      DisplayMemberPath="WarehouseName" 
-                      SelectedValuePath="WarehouseId"/>
+    <Page.Resources>
+        <Style x:Key="NavButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#64748b"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="20,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#6366f1"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
 
-            <Button x:Name="btnSelectWarehouse" Content="Vào quản lý kho" 
-                    Margin="0,20,0,0" Height="40" Background="#2196F3" 
-                    Foreground="White" Click="btnSelectWarehouse_Click"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
 
-            <TextBlock x:Name="txtStatus" Foreground="Red" Margin="0,10,0,0" HorizontalAlignment="Center"/>
-        </StackPanel>
+        <!-- ================= HEADER (COPY 100%) ================= -->
+        <Border Grid.Row="0"
+                BorderBrush="#F1F5F9"
+                BorderThickness="0,0,0,1"
+                Padding="50,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+
+                 
+                    <Border Width="28"
+                            Height="28"
+                            Background="#6366f1"
+                            CornerRadius="6"
+                            Margin="0,0,8,0">
+                        <Viewbox>
+                            <Path Stroke="White"
+                                  StrokeThickness="2"
+                                  Data="M4,6 H20 V18 H4 Z M2,20 H22"/>
+                        </Viewbox>
+                    </Border>
+
+                    <TextBlock Text="LaptopShop"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"
+                               Foreground="#1e293b"/>
+                </StackPanel>
+
+               
+
+                <StackPanel Grid.Column="2"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <StackPanel Margin="0,0,12,0">
+                        <TextBlock Text="{Binding FullName}"
+                                   FontWeight="Bold"
+                                   FontSize="13"
+                                   Foreground="#1e293b"/>
+                        <TextBlock Text="CUSTOMER ACCOUNT"
+                                   FontSize="9"
+                                   Foreground="#94a3b8"/>
+                    </StackPanel>
+                    <Border Width="38"
+Height="38"
+CornerRadius="10"
+Background="Black"
+Cursor="Hand"
+MouseLeftButtonUp="Avatar_MouseLeftButtonUp">
+                        <Border.ContextMenu>
+                            <ContextMenu x:Name="AvatarMenu">
+                                <MenuItem Header="Update Information" Click="MenuUpdate_Click">
+                                    <MenuItem.Icon>
+                                        <Path Data="M3,17.25V21h3.75L17.81,9.94l-3.75-3.75L3,17.25z" Fill="#64748b" Stretch="Uniform" Width="12"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <Separator />
+                                <MenuItem Header="Logout" Click="MenuLogout_Click">
+                                    <MenuItem.Icon>
+                                        <Path Data="M10,17l5-5-5-5v3H3v4h7V17z M21,3H11C9.9,3,9,3.9,9,5v4h2V5h10v14H11v-4H9v4c0,1.1,0.9,2,2,2h10c1.1,0,2-0.9,2-2V5C23,3.9,22.1,3,21,3z" Fill="#ef4444" Stretch="Uniform" Width="12"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </Border.ContextMenu>
+
+                        <TextBlock x:Name="txtAvatar"
+       Foreground="White"
+       VerticalAlignment="Center"
+       HorizontalAlignment="Center"
+       FontWeight="Bold"/>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ================= CONTENT (WAREHOUSE) ================= -->
+        <Grid Grid.Row="1" Background="#F4F4F4">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="400">
+                <TextBlock Text="CHỌN KHO QUẢN LÝ"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,20"/>
+
+                <TextBlock Text="Danh sách kho của bạn:" Margin="0,0,0,5"/>
+
+                <ComboBox x:Name="cbWarehouses"
+                          Height="35"
+                          DisplayMemberPath="WarehouseName"
+                          SelectedValuePath="WarehouseId"/>
+
+                <Button x:Name="btnSelectWarehouse"
+                        Content="Vào quản lý kho"
+                        Margin="0,20,0,0"
+                        Height="40"
+                        Background="#2196F3"
+                        Foreground="White"
+                        Click="btnSelectWarehouse_Click"/>
+
+                <TextBlock x:Name="txtStatus"
+                           Foreground="Red"
+                           Margin="0,10,0,0"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+
+       
+
     </Grid>
 </Page>
