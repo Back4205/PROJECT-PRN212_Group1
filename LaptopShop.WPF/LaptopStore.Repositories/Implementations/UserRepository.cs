@@ -120,6 +120,31 @@ namespace LaptopShop.Repositories.Implementations
                 _context.SaveChanges();
             }
         }
+        public void UpdateUserRoles(int userId, List<int> roleIds)
+        {
+            var user = _context.Users
+                .Include(u => u.Roles)
+                .FirstOrDefault(u => u.UserId == userId);
+
+            if (user == null) return;
+
+            user.Roles.Clear();
+
+            var roles = _context.Roles
+                .Where(r => roleIds.Contains(r.RoleId))
+                .ToList();
+
+            foreach (var role in roles)
+            {
+                user.Roles.Add(role);
+            }
+
+            _context.SaveChanges();
+        }
+        public List<Role> GetAllRoles()
+        {
+            return _context.Roles.ToList();
+        }
     }
 
    

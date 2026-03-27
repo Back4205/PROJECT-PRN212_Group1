@@ -1,31 +1,31 @@
 ﻿using LaptopShop.Entities.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace LaptopShop.WPF.Frames
 {
-    /// <summary>
-    /// Interaction logic for AdminHomePage.xaml
-    /// </summary>
     public partial class AdminHomePage : Page
     {
-        private User _user;
-        public AdminHomePage(User user)
+        private User? _currentUser;
+
+        public AdminHomePage()
         {
             InitializeComponent();
-            _user = user;
+
+            productTab.DataChanged += OnDataChanged;
+            userTab.DataChanged += OnDataChanged;
+            orderTab.DataChanged += OnDataChanged;
+        }
+
+        public AdminHomePage(User currentUser) : this()
+        {
+            _currentUser = currentUser;
+        }
+
+        private void OnDataChanged(object? sender, RoutedEventArgs e)
+        {
+            dashboardTab.RefreshData();
+            orderTab.RefreshData();
         }
     }
 }

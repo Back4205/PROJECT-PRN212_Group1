@@ -97,11 +97,11 @@ namespace LaptopShop.Repositories.Implementations
         {
             return _context.Orders
                 .Include(o => o.Customer)
+                    .ThenInclude(c => c.User)
                 .Include(o => o.OrderItems)
-                .ThenInclude(oi => oi.Product)
+                .Include(o => o.Shipment)
                 .FirstOrDefault(o => o.OrderId == id);
         }
-
         public List<Order> GetAllProductByCustomerID(int customerId)
         {
             return _context.Orders

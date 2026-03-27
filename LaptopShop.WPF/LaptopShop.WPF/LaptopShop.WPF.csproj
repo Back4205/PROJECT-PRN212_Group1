@@ -25,10 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Admin\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="Images\Banner.jpg" />
     <Resource Include="Images\mba.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

@@ -25,5 +25,7 @@ namespace LaptopShop.Repositories.Interfaces
         List<Role> GetRolesByUserId(int userId);
         Customer GetCustomerByUserId(int userId);
         void UpdateCustomer(Customer customer);
+        List<Role> GetAllRoles();
+        void UpdateUserRoles(int userId, List<int> roleIds);
     }
 }

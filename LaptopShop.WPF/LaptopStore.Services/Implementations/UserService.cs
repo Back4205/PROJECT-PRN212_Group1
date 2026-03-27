@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Text.RegularExpressions;
 using BC = BCrypt.Net.BCrypt;
 
 namespace LaptopShop.Services.Implementations
@@ -98,6 +98,112 @@ namespace LaptopShop.Services.Implementations
                     _userRepository.UpdateCustomer(customer);
                 }
             }
+        }
+        public List<User> GetAllUsers()
+        {
+            return _userRepository.GetAll();
+        }
+
+        public List<Role> GetAllRoles()
+        {
+            return _userRepository.GetAllRoles();
+        }
+
+        public void UpdateUserRoles(int userId, List<int> roleIds)
+        {
+            if (roleIds == null || roleIds.Count == 0)
+                throw new Exception("Người dùng phải có ít nhất 1 role.");
+
+            var user = _userRepository.GetById(userId);
+            if (user == null)
+                throw new Exception("Không tìm thấy người dùng.");
+
+            var currentRoles = _userRepository.GetRolesByUserId(userId);
+            bool wasAdmin = currentRoles.Any(r => r.RoleName == "Admin");
+
+            var allRoles = _userRepository.GetAllRoles();
+            var selectedRoles = allRoles.Where(r => roleIds.Contains(r.RoleId)).ToList();
+            bool willBeAdmin = selectedRoles.Any(r => r.RoleName == "Admin");
+
+            // Đếm số admin active hiện tại
+            int activeAdminCount = _userRepository.GetAll()
+                .Count(u => u.IsActive && _userRepository.GetRolesByUserId(u.UserId).Any(r => r.RoleName == "Admin"));
+
+            if (user.IsActive && wasAdmin && !willBeAdmin && activeAdminCount <= 1)
+                throw new Exception("Không thể bỏ role Admin của admin cuối cùng.");
+
+            _userRepository.UpdateUserRoles(userId, roleIds);
+        }
+
+        public void SetUserActiveStatus(int userId, bool isActive)
+        {
+            var user = _userRepository.GetById(userId);
+            if (user == null)
+                throw new Exception("Không tìm thấy người dùng.");
+
+            var roles = _userRepository.GetRolesByUserId(userId);
+            bool isAdmin = roles.Any(r => r.RoleName == "Admin");
+
+            int activeAdminCount = _userRepository.GetAll()
+                .Count(u => u.IsActive && _userRepository.GetRolesByUserId(u.UserId).Any(r => r.RoleName == "Admin"));
+
+            if (!isActive && user.IsActive && isAdmin && activeAdminCount <= 1)
+                throw new Exception("Không thể khóa admin cuối cùng.");
+
+            user.IsActive = isActive;
+            _userRepository.Update(user);
+        }
+
+        public void AddUserByAdmin(User user, List<int> roleIds)
+        {
+            if (user == null)
+                throw new Exception("Dữ liệu user không hợp lệ.");
+
+            if (string.IsNullOrWhiteSpace(user.Username))
+                throw new Exception("Username không được để trống.");
+
+            if (user.Username.Trim().Length < 3)
+                throw new Exception("Username phải có ít nhất 3 ký tự.");
+
+            if (string.IsNullOrWhiteSpace(user.PasswordHash))
+                throw new Exception("Password không được để trống.");
+
+            if (user.PasswordHash.Trim().Length < 8)
+                throw new Exception("Password phải có ít nhất 8 ký tự.");
+
+            if (string.IsNullOrWhiteSpace(user.FullName))
+                throw new Exception("Full name không được để trống.");
+
+            if (string.IsNullOrWhiteSpace(user.Email))
+                throw new Exception("Email không được để trống.");
+
+            if (!Regex.IsMatch(user.Email.Trim(), @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                throw new Exception("Email không đúng định dạng.");
+
+            if (string.IsNullOrWhiteSpace(user.Phone))
+                throw new Exception("Phone không được để trống.");
+
+            if (!Regex.IsMatch(user.Phone.Trim(), @"^\d{9,11}$"))
+                throw new Exception("Phone phải gồm 9 đến 11 chữ số.");
+
+            if (roleIds == null || roleIds.Count == 0)
+                throw new Exception("User phải có ít nhất 1 role.");
+
+            if (IsUsernameExists(user.Username))
+                throw new Exception("Username đã tồn tại.");
+
+            if (IsEmailExists(user.Email))
+                throw new Exception("Email đã tồn tại.");
+
+            user.Username = user.Username.Trim();
+            user.FullName = user.FullName.Trim();
+            user.Email = user.Email.Trim();
+            user.Phone = user.Phone.Trim();
+            user.PasswordHash = BC.HashPassword(user.PasswordHash);
+            user.IsActive = true;
+
+            _userRepository.Add(user);
+            _userRepository.UpdateUserRoles(user.UserId, roleIds);
         }
 
     }

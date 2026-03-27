@@ -17,5 +17,10 @@ namespace LaptopShop.Services.Interfaces
         void Update(Order order);
         void Delete(int id);
         bool CancelOrder(int orderId);
+
+        List<OrderItem> GetOrderItemsByOrderId(int orderId);
+        int GetTotalOrders();
+        decimal GetTotalRevenue();
+        int GetOrderCountByStatus(string status);
     }
 }

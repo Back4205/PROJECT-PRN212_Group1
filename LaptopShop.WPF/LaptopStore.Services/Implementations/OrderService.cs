@@ -113,5 +113,31 @@ namespace LaptopShop.Services.Implementations
         {
            return _orderRepository.CancelOrder(orderId);
         }
+        public List<OrderItem> GetOrderItemsByOrderId(int orderId)
+        {
+            var order = _orderRepository.GetById(orderId);
+            if (order == null)
+                return new List<OrderItem>();
+
+            return order.OrderItems?.ToList() ?? new List<OrderItem>();
+        }
+
+        public int GetTotalOrders()
+        {
+            return _orderRepository.GetAll().Count;
+        }
+
+        public decimal GetTotalRevenue()
+        {
+            return _orderRepository.GetAll()
+                .Where(o => o.Status == "Completed")
+                .Sum(o => o.TotalAmount);
+        }
+
+        public int GetOrderCountByStatus(string status)
+        {
+            return _orderRepository.GetAll()
+                .Count(o => o.Status == status);
+        }
     }
 }
