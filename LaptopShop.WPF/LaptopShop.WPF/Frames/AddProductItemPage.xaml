@@ -1,0 +1,43 @@
+﻿<Page x:Class="LaptopShop.WPF.Frames.AddProductItemPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Nhập kho sản phẩm" Background="#F9F9F9">
+
+    <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+        <Border Background="White" CornerRadius="10" Padding="30" Width="450">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="15" Color="#DDD" ShadowDepth="2"/>
+            </Border.Effect>
+
+            <StackPanel>
+                <TextBlock Text="NHẬP KHO HÀNG LOẠT" FontSize="20" FontWeight="Bold" Margin="0,0,0,25" HorizontalAlignment="Center" Foreground="#2E7D32"/>
+
+                <TextBlock Text="Chọn loại Laptop:" Margin="0,0,0,5"/>
+                <ComboBox x:Name="cbProducts" DisplayMemberPath="ProductName" SelectedValuePath="ProductId" Margin="0,0,0,15" Height="35" VerticalContentAlignment="Center"/>
+
+                <TextBlock Text="Trạng thái hàng nhập:" Margin="0,0,0,5"/>
+                <ComboBox x:Name="cbStatus" Margin="0,0,0,15" Height="35" SelectedIndex="0" VerticalContentAlignment="Center">
+                    <ComboBoxItem Content="InStock" Tag="InStock"/>
+                    <ComboBoxItem Content="Defective" Tag="Defective"/>
+                </ComboBox>
+
+                <TextBlock Text="Số lượng nhập:" Margin="0,0,0,5"/>
+                <TextBox x:Name="txtQuantity" Margin="0,0,0,15" Height="35" VerticalContentAlignment="Center" FontSize="16"/>
+
+                <TextBlock Text="Tiền tố số Serial (Ví dụ: LAP-):" Margin="0,0,0,5"/>
+                <TextBox x:Name="txtSerialPrefix" Margin="0,0,0,15" Height="35" 
+         VerticalContentAlignment="Center" FontSize="14"/>
+
+                <Button x:Name="btnConfirm" Content="XÁC NHẬN NHẬP KHO" Height="45" Background="#4CAF50" Foreground="White" FontWeight="Bold" Click="btnConfirm_Click" BorderThickness="0">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+                <Button x:Name="btnCancel" Content="Hoàn tất &amp; Quay lại" Margin="0,15,0,0" Click="btnCancel_Click" Background="Transparent" BorderBrush="#CCC" Foreground="#666" Height="35"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>

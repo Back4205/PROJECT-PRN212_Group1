@@ -1,0 +1,95 @@
+﻿<Page x:Class="LaptopShop.WPF.Pages.Staff.ShipmentList"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="750" d:DesignWidth="1100"
+      Title="Quản lý giao hàng" Background="#F8FAFC">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,15">
+            <TextBlock Text="ĐIỀU PHỐI VẬN CHUYỂN" FontSize="20" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,10"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Tìm kiếm:" VerticalAlignment="Center" Foreground="#64748B"/>
+                <TextBox x:Name="txtSearch" Width="280" Margin="10,0,20,0" Padding="8,5" 
+                         TextChanged="Filter_Changed" VerticalAlignment="Center"
+                         GotFocus="txtSearch_GotFocus" LostFocus="txtSearch_LostFocus"
+                         Foreground="Gray" Text="Nhập tên hoặc số điện thoại..."/>
+
+                <TextBlock Text="Trạng thái:" VerticalAlignment="Center" Foreground="#64748B"/>
+                <ComboBox x:Name="cbStatusFilter" Width="130" Margin="10,0,20,0" SelectionChanged="Filter_Changed">
+                    <ComboBoxItem Content="Tất cả" IsSelected="True"/>
+                    <ComboBoxItem Content="Preparing"/>
+                    <ComboBoxItem Content="Shipping"/>
+                    <ComboBoxItem Content="Delivered"/>
+                    <ComboBoxItem Content="Returned"/>
+                </ComboBox>
+
+                <Button Content="Làm mới" Padding="20,5" Click="btnRefresh_Click" Cursor="Hand" Background="#6366F1" Foreground="White" BorderThickness="0"/>
+            </StackPanel>
+        </StackPanel>
+
+        <DataGrid x:Name="dgShipments" Grid.Row="1" AutoGenerateColumns="False" 
+                  CanUserAddRows="False" IsReadOnly="True" Background="White" 
+                  SelectionChanged="dgShipments_SelectionChanged"
+                  BorderThickness="1" BorderBrush="#E2E8F0" RowHeight="45">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Mã Ship" Binding="{Binding ShipmentId}" Width="70"/>
+                <DataGridTextColumn Header="Khách hàng" Binding="{Binding Order.Customer.User.FullName}" Width="150"/>
+                <DataGridTextColumn Header="SĐT" Binding="{Binding Order.Customer.User.Phone}" Width="100"/>
+                <DataGridTextColumn Header="Địa chỉ nhận" Binding="{Binding ShipAddress}" Width="*"/>
+                <DataGridTextColumn Header="Ngày xuất" Binding="{Binding ShipDate, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="140"/>
+
+                <DataGridTemplateColumn Header="Trạng thái" Width="110">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border CornerRadius="10" Padding="8,2" HorizontalAlignment="Center" Background="#DBEAFE">
+                                <TextBlock Text="{Binding Status}" Foreground="#1E40AF" FontWeight="SemiBold" FontSize="11"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Thao tác" Width="250">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button Content="🚚 Giao" Background="#3B82F6" Foreground="White" Margin="2" Padding="5,2" Click="btnStartShipping_Click"/>
+                                <Button Content="✅ Xong" Background="#10B981" Foreground="White" Margin="2" Padding="5,2" Click="btnMarkDelivered_Click"/>
+                                <Button Content="🔄 Trả hàng" Background="#F59E0B" Foreground="White" Margin="2" Padding="5,2" Click="btnReturn_Click"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Separator Grid.Row="2" Margin="0,15" Background="#CBD5E1"/>
+
+        <GroupBox Grid.Row="3" Header="DANH SÁCH MÁY (SERIAL NUMBER) TRONG LÔ HÀNG" BorderThickness="1" BorderBrush="#E2E8F0" Padding="10">
+            <DataGrid x:Name="dgShipmentProducts" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" Background="Transparent" BorderThickness="0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Tên Laptop" Binding="{Binding SnapshotProductName}" Width="*"/>
+                    <DataGridTextColumn Header="Số Serial" Binding="{Binding ProductItem.SerialNumber}" Width="250">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Foreground" Value="#6366F1"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Giá lúc mua" Binding="{Binding SnapshotPrice, StringFormat={}{0:N0} VNĐ}" Width="150"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+    </Grid>
+</Page>

@@ -1,0 +1,61 @@
+﻿<Page x:Class="LaptopShop.WPF.Frames.ReturnedOrderPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      Title="Đơn hàng bị trả lại" Background="#F0F2F5"
+      d:DesignHeight="450" d:DesignWidth="800">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" Margin="0,0,0,20">
+            <Button x:Name="btnBack" Content="⬅ Quay lại" Width="100" Height="35" 
+                    Click="btnBack_Click" Background="#607D8B" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+            <TextBlock Text="DANH SÁCH ĐƠN HÀNG HOÀN TRẢ &amp; HỦY" 
+                       FontSize="20" FontWeight="Bold" Margin="20,0,0,0" VerticalAlignment="Center" Foreground="#2C3E50"/>
+        </DockPanel>
+
+        <DataGrid Grid.Row="1" x:Name="dgReturnedOrders" 
+                  AutoGenerateColumns="False" CanUserAddRows="False" 
+                  IsReadOnly="True" Background="White"
+                  ColumnHeaderHeight="40" RowHeight="45">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#34495E"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="Padding" Value="10,0"/>
+                </Style>
+            </DataGrid.Resources>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Mã Vận Chuyển" Binding="{Binding ShipmentId}" Width="120"/>
+                <DataGridTextColumn Header="Mã Đơn" Binding="{Binding OrderId}" Width="80"/>
+                <DataGridTextColumn Header="Khách Hàng" Binding="{Binding CustomerName}" Width="*"/>
+                <DataGridTextColumn Header="Sản Phẩm" Binding="{Binding SnapshotProductName}" Width="1.5*"/>
+                <DataGridTextColumn Header="Số Serial" Binding="{Binding SerialNumber}" Width="150" FontWeight="Bold"/>
+
+                <DataGridTemplateColumn Header="Thao tác" Width="120">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Nhập kho" Click="btnReStock_Click" 
+                                    Background="#27AE60" Foreground="White" FontWeight="SemiBold"
+                                    Padding="10,5" Cursor="Hand">
+                                <Button.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="3"/>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>

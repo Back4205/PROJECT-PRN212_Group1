@@ -1,0 +1,85 @@
+﻿<Page x:Class="LaptopShop.WPF.Frames.StaffHomePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="1200"
+      Title="Staff Home" Background="White">
+
+    <Page.Resources>
+        <Style x:Key="NavButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#64748b"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="20,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" Padding="50,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="28" Height="28" Background="#6366f1" CornerRadius="6" Margin="0,0,8,0">
+                        <Viewbox>
+                            <Path Stroke="White" StrokeThickness="2" Data="M4,6 H20 V18 H4 Z M2,20 H22"/>
+                        </Viewbox>
+                    </Border>
+                    <TextBlock Text="LaptopShop" FontSize="20" FontWeight="Bold" Foreground="#1e293b"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button Content="Order List" Style="{StaticResource NavButtonStyle}" Click="NavOrderList_Click"/>
+                    <Button Content="Shipment List" Style="{StaticResource NavButtonStyle}" Click="NavShipment_Click"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <StackPanel Margin="0,0,12,0">
+                        <TextBlock Text="{Binding FullName}" FontWeight="Bold" Foreground="#1e293b" HorizontalAlignment="Right"/>
+                        <TextBlock Text="STAFF ACCOUNT" FontSize="9" Foreground="#6366f1" HorizontalAlignment="Right"/>
+                    </StackPanel>
+
+                    <Border Width="38" Height="38" CornerRadius="10" Background="Black" Cursor="Hand" MouseLeftButtonUp="Avatar_MouseLeftButtonUp">
+                        <Border.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Update Information" Click="MenuUpdate_Click"/>
+                                <Separator />
+                                <MenuItem Header="Logout" Click="MenuLogout_Click"/>
+                            </ContextMenu>
+                        </Border.ContextMenu>
+                        <TextBlock x:Name="txtAvatar" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"/>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Frame Grid.Row="1" x:Name="MainContentFrame" NavigationUIVisibility="Hidden"/>
+
+        <Border Grid.Row="2" Background="#F8FAFC" BorderBrush="#F1F5F9" BorderThickness="0,1,0,0">
+            <TextBlock Text="© 2026 LaptopShop - Staff Management System" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#94a3b8" FontSize="12"/>
+        </Border>
+    </Grid>
+</Page>
