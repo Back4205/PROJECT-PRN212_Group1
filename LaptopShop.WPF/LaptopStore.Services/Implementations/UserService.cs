@@ -6,7 +6,7 @@ using LaptopShop.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
+
 namespace LaptopShop.Services.Implementations
 {
     public class UserService : IUserService
@@ -18,6 +18,7 @@ namespace LaptopShop.Services.Implementations
             _userRepository = new UserRepository();
         }
 
+        // ================= LOGIN =================
         public User Login(string username, string password)
         {
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
@@ -38,6 +39,7 @@ namespace LaptopShop.Services.Implementations
             }
 
             string hashedPassword = HashPassword(password.Trim());
+
             if (user.PasswordHash != hashedPassword)
             {
                 throw new Exception("Sai mật khẩu.");
@@ -46,6 +48,7 @@ namespace LaptopShop.Services.Implementations
             return user;
         }
 
+        // ================= REGISTER =================
         public void Register(User user)
         {
             if (user == null)
@@ -76,6 +79,7 @@ namespace LaptopShop.Services.Implementations
             _userRepository.Add(user);
         }
 
+        // ================= GET =================
         public List<User> GetAllUsers()
         {
             return _userRepository.GetAll();
@@ -86,17 +90,12 @@ namespace LaptopShop.Services.Implementations
             return _userRepository.GetAllRoles();
         }
 
+        // ================= UPDATE ROLE =================
         public void UpdateUserRoles(int userId, List<int> roleIds)
         {
             if (roleIds == null || roleIds.Count == 0)
             {
                 throw new Exception("Người dùng phải có ít nhất 1 role.");
-            }
-
-            var user = _userRepository.GetById(userId);
-            if (user == null)
-            {
-                throw new Exception("Không tìm thấy người dùng.");
             }
 
             using var context = new LaptopShopDbContext();
@@ -116,21 +115,19 @@ namespace LaptopShop.Services.Implementations
                 .Where(r => roleIds.Contains(r.RoleId))
                 .ToList();
 
-            if (selectedRoles.Count != roleIds.Count)
-            {
-                throw new Exception("Có role không hợp lệ.");
-            }
-
             bool willBeAdmin = selectedRoles.Any(r => r.RoleName == "Admin");
 
             int activeAdminCount = _userRepository.CountActiveAdmins();
 
+            // ❗ CHẶN XÓA ADMIN CUỐI
             if (userInDb.IsActive && wasAdmin && !willBeAdmin && activeAdminCount <= 1)
             {
-                throw new Exception("Không thể bỏ role Admin của admin cuối cùng đang hoạt động.");
+                throw new Exception("Không thể bỏ role Admin của admin cuối cùng.");
             }
 
+            // ❗ RESET ROLE
             userInDb.Roles.Clear();
+
             foreach (var role in selectedRoles)
             {
                 userInDb.Roles.Add(role);
@@ -139,9 +136,11 @@ namespace LaptopShop.Services.Implementations
             context.SaveChanges();
         }
 
+        // ================= LOCK / UNLOCK =================
         public void SetUserActiveStatus(int userId, bool isActive)
         {
             var user = _userRepository.GetById(userId);
+
             if (user == null)
             {
                 throw new Exception("Không tìm thấy người dùng.");
@@ -150,18 +149,21 @@ namespace LaptopShop.Services.Implementations
             bool isAdmin = user.Roles.Any(r => r.RoleName == "Admin");
             int activeAdminCount = _userRepository.CountActiveAdmins();
 
+            // ❗ CHẶN LOCK ADMIN CUỐI
             if (!isActive && user.IsActive && isAdmin && activeAdminCount <= 1)
             {
-                throw new Exception("Không thể khóa admin cuối cùng đang hoạt động.");
+                throw new Exception("Không thể khóa admin cuối cùng.");
             }
 
             user.IsActive = isActive;
             _userRepository.Update(user);
         }
 
+        // ================= DELETE =================
         public void DeleteUser(int userId)
         {
             var user = _userRepository.GetById(userId);
+
             if (user == null)
             {
                 throw new Exception("Không tìm thấy người dùng.");
@@ -172,12 +174,61 @@ namespace LaptopShop.Services.Implementations
 
             if (user.IsActive && isAdmin && activeAdminCount <= 1)
             {
-                throw new Exception("Không thể xóa admin cuối cùng đang hoạt động.");
+                throw new Exception("Không thể xóa admin cuối cùng.");
             }
 
             _userRepository.Delete(userId);
         }
 
+        // ================= ADD USER (ADMIN) =================
+        public void AddUserByAdmin(User user, List<int> roleIds)
+        {
+            if (user == null)
+            {
+                throw new Exception("Dữ liệu user không hợp lệ.");
+            }
+
+            ValidateUserBasicInfo(user);
+
+            if (roleIds == null || roleIds.Count == 0)
+            {
+                throw new Exception("User phải có ít nhất 1 role.");
+            }
+
+            if (_userRepository.GetByUsername(user.Username.Trim()) != null)
+            {
+                throw new Exception("Username đã tồn tại.");
+            }
+
+            if (_userRepository.GetByEmail(user.Email.Trim()) != null)
+            {
+                throw new Exception("Email đã tồn tại.");
+            }
+
+            using var context = new LaptopShopDbContext();
+
+            var selectedRoles = context.Roles
+                .Where(r => roleIds.Contains(r.RoleId))
+                .ToList();
+
+            user.Username = user.Username.Trim();
+            user.PasswordHash = HashPassword(user.PasswordHash);
+            user.FullName = user.FullName.Trim();
+            user.Email = user.Email.Trim();
+            user.Phone = user.Phone.Trim();
+            user.IsActive = true;
+            user.CreatedAt = DateTime.Now;
+
+            foreach (var role in selectedRoles)
+            {
+                user.Roles.Add(role);
+            }
+
+            context.Users.Add(user);
+            context.SaveChanges();
+        }
+
+        // ================= VALIDATE =================
         private void ValidateUserBasicInfo(User user)
         {
             if (string.IsNullOrWhiteSpace(user.Username))
@@ -196,6 +247,7 @@ namespace LaptopShop.Services.Implementations
                 throw new Exception("Phone không được để trống.");
         }
 
+        // ================= HASH =================
         private string HashPassword(string password)
         {
             using SHA256 sha256 = SHA256.Create();

@@ -2,7 +2,7 @@
 using LaptopShop.Repositories.Implementations;
 using LaptopShop.Repositories.Interfaces;
 using LaptopShop.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
+
 namespace LaptopShop.Services.Implementations
 {
     public class OrderService : IOrderService
@@ -26,53 +26,32 @@ namespace LaptopShop.Services.Implementations
             {
                 throw new Exception("Không tìm thấy đơn hàng.");
             }
-
             return order;
+        }
+
+        public List<OrderItem> GetOrderItemsByOrderId(int orderId)
+        {
+            return _orderRepository.GetOrderItemsByOrderId(orderId);
         }
 
         public void CreateOrder(Order order)
         {
             if (order == null)
-            {
-                throw new Exception("Dữ liệu đơn hàng không hợp lệ.");
-            }
-
-            if (order.CustomerId <= 0)
-            {
-                throw new Exception("Customer không hợp lệ.");
-            }
-
-            if (order.TotalAmount < 0)
-            {
-                throw new Exception("Tổng tiền không hợp lệ.");
-            }
-
-            if (string.IsNullOrWhiteSpace(order.Status))
-            {
-                order.Status = "Pending";
-            }
+                throw new Exception("Order không hợp lệ.");
 
             order.OrderDate = DateTime.Now;
+            if (string.IsNullOrEmpty(order.Status))
+                order.Status = "Pending";
+
             _orderRepository.Add(order);
         }
 
         public void Update(Order order)
         {
             if (order == null)
-            {
-                throw new Exception("Dữ liệu đơn hàng không hợp lệ.");
-            }
+                throw new Exception("Order không hợp lệ.");
 
-            var existing = _orderRepository.GetById(order.OrderId);
-            if (existing == null)
-            {
-                throw new Exception("Không tìm thấy đơn hàng.");
-            }
-
-            existing.Status = order.Status;
-            existing.TotalAmount = order.TotalAmount;
-
-            _orderRepository.Update(existing);
+            _orderRepository.Update(order);
         }
 
         public void Delete(int id)

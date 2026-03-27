@@ -1,7 +1,7 @@
 ﻿using LaptopShop.Entities.Models;
 using LaptopShop.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+
 namespace LaptopShop.Repositories.Implementations
 {
     public class OrderRepository : IOrderRepository
@@ -17,7 +17,9 @@ namespace LaptopShop.Repositories.Implementations
         {
             return _context.Orders
                 .Include(o => o.Customer)
+                    .ThenInclude(c => c.User)
                 .Include(o => o.OrderItems)
+                .Include(o => o.Shipment)
                 .OrderByDescending(o => o.OrderDate)
                 .ToList();
         }
@@ -26,9 +28,20 @@ namespace LaptopShop.Repositories.Implementations
         {
             return _context.Orders
                 .Include(o => o.Customer)
+                    .ThenInclude(c => c.User)
                 .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Product)
                 .Include(o => o.Shipment)
                 .FirstOrDefault(o => o.OrderId == id);
+        }
+
+        public List<OrderItem> GetOrderItemsByOrderId(int orderId)
+        {
+            return _context.OrderItems
+                .Include(oi => oi.Product)
+                .Include(oi => oi.ProductItem)
+                .Where(oi => oi.OrderId == orderId)
+                .ToList();
         }
 
         public void Add(Order order)

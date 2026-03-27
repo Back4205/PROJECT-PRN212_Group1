@@ -11,6 +11,7 @@ namespace LaptopShop.Services.Interfaces
         List<Role> GetAllRoles();
         void UpdateUserRoles(int userId, List<int> roleIds);
         void SetUserActiveStatus(int userId, bool isActive);
-        void DeleteUser(int userId);
+
+        void AddUserByAdmin(User user, List<int> roleIds);
     }
 }

@@ -6,6 +6,8 @@ namespace LaptopShop.Services.Interfaces
     {
         List<Order> GetAll();
         Order GetById(int id);
+        List<OrderItem> GetOrderItemsByOrderId(int orderId);
+
         void CreateOrder(Order order);
         void Update(Order order);
         void Delete(int id);
