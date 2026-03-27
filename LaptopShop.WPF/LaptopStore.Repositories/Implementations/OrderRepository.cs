@@ -181,5 +181,67 @@ namespace LaptopShop.Repositories.Implementations
                 throw;
             }
         }
+        public List<Order> GetConfirmedOrdersWithItems()
+        {
+            // Đảm bảo đã using Microsoft.EntityFrameworkCore; để dùng được .Include()
+            return _context.Orders
+                .Include(o => o.Customer)
+                .ThenInclude(c => c.User)
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Product) // Để hiện tên model laptop
+                .Where(o => o.Status == "Confirmed")
+                .ToList();
+        }
+        public void CompleteOrderExport(int orderId)
+        {
+            var order = _context.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefault(o => o.OrderId == orderId);
+
+            if (order == null) throw new Exception("Không tìm thấy đơn hàng.");
+
+            foreach (var item in order.OrderItems)
+            {
+                // Kiểm tra đúng tên thuộc tính trong class OrderItem (thử Id thay vì ID)
+                if (item.ProductItemId.HasValue)
+                {
+                    var pItem = _context.ProductItems
+                        .FirstOrDefault(pi => pi.ProductItemId == item.ProductItemId.Value);
+
+                    if (pItem != null)
+                    {
+                        pItem.Status = "Sold";
+                        _context.Entry(pItem).State = EntityState.Modified;
+                    }
+                }
+            }
+            order.Status = "Completed";
+            _context.SaveChanges();
+        }
+        // Trong OrderRepository.cs
+        public dynamic GetReturnedCancelledOrders()
+        {
+            var result = from s in _context.Shipments
+                         join o in _context.Orders on s.OrderId equals o.OrderId
+                         join c in _context.Customers on o.CustomerId equals c.CustomerId
+                         join u in _context.Users on c.UserId equals u.UserId
+                         join oi in _context.OrderItems on o.OrderId equals oi.OrderId
+                         join pi in _context.ProductItems on oi.ProductItemId equals pi.ProductItemId
+                         where s.Status == "Returned" && o.Status == "Cancelled"
+                         select new
+                         {
+                             s.ShipmentId,
+                             o.OrderId,
+                             CustomerName = u.FullName,
+                             oi.SnapshotProductName,
+                             pi.SerialNumber
+                         };
+            return result.ToList();
+        }
+
+        public bool IsSerialDuplicate(string serial, int currentId)
+        {
+            throw new NotImplementedException();
+        }
     }
-}
+    }

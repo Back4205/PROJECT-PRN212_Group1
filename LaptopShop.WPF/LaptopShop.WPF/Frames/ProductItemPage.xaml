@@ -1,0 +1,189 @@
+﻿<Page x:Class="LaptopShop.WPF.Frames.ProductItemPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      Title="Quản lý kho Laptop" 
+      Background="#F4F7F9"
+      d:DesignHeight="600" d:DesignWidth="1000"
+      Loaded="Page_Loaded">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" Margin="0,0,0,20">
+            <Button x:Name="btnBack" Content="⬅ Quay lại" Width="100" Height="35" 
+                    Click="btnBack_Click" Background="#607D8B" Foreground="White" 
+                    BorderThickness="0" Cursor="Hand"/>
+
+            <TextBlock x:Name="txtHeader" Text="DANH SÁCH THIẾT BỊ" FontSize="22" 
+                       FontWeight="Bold" Margin="20,0,0,0" VerticalAlignment="Center" 
+                       Foreground="#2C3E50"/>
+
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                <TextBox x:Name="txtSearchProduct" Width="220" Height="35" 
+                         VerticalContentAlignment="Center" Padding="10,0"
+                         TextChanged="txtSearchProduct_TextChanged" 
+                         Tag="Tìm Serial hoặc tên máy..."/>
+
+                <Button x:Name="btnOpenAddForm" Content="+ Nhập kho" Width="120" Height="35" 
+                        Click="btnOpenAddForm_Click" Background="#27AE60" Foreground="White" 
+                        Margin="15,0,0,0" FontWeight="SemiBold" Cursor="Hand"/>
+
+                <Button x:Name="btnViewReturned" Content="🔄 Đơn trả lại" Width="120" Height="35" 
+                        Click="btnViewReturned_Click" Background="#E67E22" Foreground="White" 
+                        Margin="10,0,0,0" FontWeight="SemiBold" Cursor="Hand"/>
+
+                <Button x:Name="btnGoToExport" Content="📦 Xuất kho" Width="120" Height="35" 
+                        Click="btnGoToExport_Click" Background="#2980B9" Foreground="White" 
+                        Margin="10,0,10,0" FontWeight="SemiBold" Cursor="Hand"/>
+            </StackPanel>
+        </DockPanel>
+
+        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="10">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="15" Direction="-90" RenderingBias="Quality" ShadowDepth="2" Opacity="0.1"/>
+            </Border.Effect>
+
+            <DataGrid x:Name="dgProductItems" AutoGenerateColumns="False" 
+                      CanUserAddRows="False" IsReadOnly="True" BorderThickness="0" 
+                      Background="Transparent" ColumnHeaderHeight="45" RowHeight="45" 
+                      FontSize="14" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F0F0F0">
+
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#34495E"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="Padding" Value="15,0"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                    </Style>
+                </DataGrid.Resources>
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding ProductItemId}" Width="60"/>
+                    <DataGridTextColumn Header="Số Serial" Binding="{Binding SerialNumber}" Width="180">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Margin" Value="10,0"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="Tên Sản Phẩm" Binding="{Binding Product.ProductName}" Width="*"/>
+                    <DataGridTextColumn Header="Thương Hiệu" Binding="{Binding Product.Brand}" Width="120"/>
+
+                    <DataGridTemplateColumn Header="Trạng Thái" Width="120">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Status}" VerticalAlignment="Center" FontWeight="Bold">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status}" Value="InStock">
+                                                    <Setter Property="Foreground" Value="#27AE60"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="Sold">
+                                                    <Setter Property="Foreground" Value="#E74C3C"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="Defective">
+                                                    <Setter Property="Foreground" Value="#F39C12"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="Thao tác" Width="160">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Content="Sửa" Click="btnEdit_Click" Background="#3498DB" 
+                                            Foreground="White" Padding="12,5" Margin="0,0,8,0" 
+                                            BorderThickness="0" Cursor="Hand"/>
+                                    <Button Content="Xóa" Click="btnDelete_Click" Background="#E74C3C" 
+                                            Foreground="White" Padding="12,5" BorderThickness="0" 
+                                            Cursor="Hand"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <Grid x:Name="gridAddForm" Grid.RowSpan="2" Visibility="Collapsed">
+            <Border Background="#99000000"/>
+            <Border Background="White" Width="480" VerticalAlignment="Center" CornerRadius="15" Padding="30">
+                <StackPanel>
+                    <TextBlock Text="📦 NHẬP THIẾT BỊ MỚI" FontSize="22" FontWeight="Bold" 
+                               Margin="0,0,0,25" HorizontalAlignment="Center" Foreground="#2980B9"/>
+
+                    <TextBlock Text="Chọn loại Laptop:" Margin="0,0,0,5" FontWeight="SemiBold"/>
+                    <ComboBox x:Name="cbProducts" DisplayMemberPath="ProductName" 
+                              SelectedValuePath="ProductId" Margin="0,0,0,15" Height="40" 
+                              VerticalContentAlignment="Center"/>
+                    <TextBlock Text="Trạng thái nhập kho:" Margin="0,0,0,5" FontWeight="SemiBold"/>
+                    <ComboBox x:Name="cbAddStatus" Height="40" Margin="0,0,0,20" VerticalContentAlignment="Center">
+                        <ComboBoxItem Content="InStock" IsSelected="True"/>
+                        <ComboBoxItem Content="Defective"/>
+                    </ComboBox>
+                    <TextBlock Text="Danh sách Serial (Mỗi dòng 1 mã):" Margin="0,0,0,5" FontWeight="SemiBold"/>
+                    <TextBox x:Name="txtSerialList" Height="180" AcceptsReturn="True" 
+                             VerticalScrollBarVisibility="Auto" Margin="0,0,0,20" Padding="10" 
+                             BorderBrush="#BDC3C7"/>
+
+                    <UniformGrid Columns="2">
+                        <Button Content="Hủy bỏ" Click="btnCancel_Click" Margin="5" Height="45" 
+                                Background="#ECF0F1" BorderThickness="0" Cursor="Hand"/>
+                        <Button x:Name="btnConfirmAdd" Content="Xác nhận nhập" Click="btnConfirmAdd_Click" 
+                                Background="#27AE60" Foreground="White" FontWeight="Bold" 
+                                Margin="5" Height="45" BorderThickness="0" Cursor="Hand"/>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid x:Name="gridEditForm" Grid.RowSpan="2" Visibility="Collapsed">
+            <Border Background="#99000000"/>
+            <Border Background="White" Width="420" VerticalAlignment="Center" CornerRadius="15" Padding="30">
+                <StackPanel>
+                    <TextBlock Text="📝 CẬP NHẬT THÔNG TIN" FontSize="22" FontWeight="Bold" 
+                               Margin="0,0,0,25" HorizontalAlignment="Center" Foreground="#2980B9"/>
+
+                    <TextBlock Text="Sản phẩm:" Margin="0,0,0,5" FontWeight="SemiBold"/>
+                    <ComboBox x:Name="cbEditProduct" Height="40" Margin="0,0,0,15" 
+                              DisplayMemberPath="ProductName" SelectedValuePath="ProductId" 
+                              VerticalContentAlignment="Center"/>
+
+                    <TextBlock Text="Số Serial:" Margin="0,0,0,5" FontWeight="SemiBold"/>
+                    <TextBox x:Name="txtEditSerial" Height="40" Margin="0,0,0,15" 
+                             VerticalContentAlignment="Center" Padding="10" BorderBrush="#BDC3C7"/>
+
+                    <TextBlock Text="Trạng thái:" Margin="0,0,0,5" FontWeight="SemiBold"/>
+                    <ComboBox x:Name="cbEditStatus" Height="40" Margin="0,0,0,30" 
+                              VerticalContentAlignment="Center">
+                        <ComboBoxItem Content="InStock"/>
+                        <ComboBoxItem Content="Defective"/>
+                    </ComboBox>
+
+                    <UniformGrid Columns="2">
+                        <Button Content="Hủy" Click="btnCancelEdit_Click" Margin="5" Height="45" 
+                                Background="#ECF0F1" BorderThickness="0" Cursor="Hand"/>
+                        <Button Content="Lưu thay đổi" Click="btnConfirmUpdate_Click" 
+                                Background="#27AE60" Foreground="White" FontWeight="Bold" 
+                                Margin="5" Height="45" BorderThickness="0" Cursor="Hand"/>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

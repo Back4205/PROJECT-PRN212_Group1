@@ -16,6 +16,12 @@ namespace LaptopShop.Repositories.Interfaces
         void Delete(int id);
         void UpdateStatus(int orderId, string status);
         List<Order> GetAllProductByCustomerID(int id);
+<<<<<<< HEAD
         bool CancelOrder(int orderId);
+=======
+        List<Order> GetConfirmedOrdersWithItems();
+        void CompleteOrderExport(int orderId);
+        bool IsSerialDuplicate(string serial, int currentId);
+>>>>>>> origin/KhanhP
     }
 }

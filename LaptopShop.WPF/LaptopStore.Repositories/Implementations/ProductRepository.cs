@@ -25,15 +25,24 @@ namespace LaptopShop.Repositories.Implementations
 
         public void Delete(int id)
         {
-            var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
-            if(product != null)
+            var item = _context.ProductItems.Find(id);
+            if (item != null)
             {
-                _context.Products.Remove(product);
-                _context.SaveChanges();
+                // Chỉ cho phép xóa nếu trạng thái là InStock hoặc Defective
+                if (item.Status == "InStock" || item.Status == "Defective")
+                {
+                    _context.ProductItems.Remove(item);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    // Quăng lỗi để tầng giao diện (UI) có thể bắt và hiển thị thông báo
+                    throw new InvalidOperationException($"Không thể xóa thiết bị đang ở trạng thái: {item.Status}");
+                }
             }
         }
 
-       
+
 
         public List<Product> GetAll()
         {
