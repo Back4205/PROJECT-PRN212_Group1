@@ -131,7 +131,11 @@
                     <ComboBox x:Name="cbProducts" DisplayMemberPath="ProductName" 
                               SelectedValuePath="ProductId" Margin="0,0,0,15" Height="40" 
                               VerticalContentAlignment="Center"/>
-
+                    <TextBlock Text="Trạng thái nhập kho:" Margin="0,0,0,5" FontWeight="SemiBold"/>
+                    <ComboBox x:Name="cbAddStatus" Height="40" Margin="0,0,0,20" VerticalContentAlignment="Center">
+                        <ComboBoxItem Content="InStock" IsSelected="True"/>
+                        <ComboBoxItem Content="Defective"/>
+                    </ComboBox>
                     <TextBlock Text="Danh sách Serial (Mỗi dòng 1 mã):" Margin="0,0,0,5" FontWeight="SemiBold"/>
                     <TextBox x:Name="txtSerialList" Height="180" AcceptsReturn="True" 
                              VerticalScrollBarVisibility="Auto" Margin="0,0,0,20" Padding="10" 

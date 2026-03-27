@@ -28,9 +28,7 @@ namespace LaptopShop.WPF.Frames
 
         private void LoadData()
         {
-            // Gọi một hàm Refresh nếu Repository của bạn hỗ trợ, 
-            // hoặc đơn giản là khởi tạo lại Repo để xóa sạch Context cũ bên trong nó.
-            // Cách an toàn nhất không phá vỡ logic:
+            // Khởi tạo lại Repo để xóa sạch Context cũ
             IProductItemRepository freshRepo = new ProductItemRepository();
 
             _fullList = freshRepo.GetByWarehouseId(_warehouseId);
@@ -39,9 +37,13 @@ namespace LaptopShop.WPF.Frames
             dgProductItems.ItemsSource = _fullList;
             txtHeader.Text = $"KHO #{_warehouseId} ({_fullList.Count} thiết bị)";
 
-            var products = _productRepo.GetAll();
-            cbProducts.ItemsSource = products;
-            cbEditProduct.ItemsSource = products;
+            // CHÈN MỚI: Chỉ lấy các sản phẩm có IsActive = true để nhập kho
+            var activeProducts = _productRepo.GetAll()
+                                             .Where(p => p.IsActive == true)
+                                             .ToList();
+
+            cbProducts.ItemsSource = activeProducts;
+            cbEditProduct.ItemsSource = activeProducts;
         }
 
         // ================= XỬ LÝ NHẬP KHO (ADD) =================
@@ -57,10 +59,14 @@ namespace LaptopShop.WPF.Frames
             }
 
             int pId = (int)cbProducts.SelectedValue;
-            // Tách danh sách Serial theo từng dòng
+
+            // CHÈN MỚI: Lấy trạng thái từ ComboBox cbAddStatus (Logic bạn muốn thêm)
+            string initialStatus = (cbAddStatus.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "InStock";
+
+            // GIỮ NGUYÊN LOGIC CŨ: Tách danh sách Serial theo từng dòng
             var serialLines = txtSerialList.Text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
                                                 .Select(s => s.Trim())
-                                                .Distinct() // Loại bỏ các số trùng nhau ngay trong danh sách nhập
+                                                .Distinct()
                                                 .ToList();
 
             List<ProductItem> validItems = new List<ProductItem>();
@@ -80,7 +86,7 @@ namespace LaptopShop.WPF.Frames
                         ProductId = pId,
                         SerialNumber = serial,
                         WarehouseId = _warehouseId,
-                        Status = "InStock"
+                        Status = initialStatus // Dùng biến mới thay vì fix cứng "InStock"
                     });
                 }
             }
@@ -134,14 +140,12 @@ namespace LaptopShop.WPF.Frames
             string newSerial = txtEditSerial.Text.Trim();
             int currentItemId = _selectedItemForEdit.ProductItemId;
 
-            // 1. Kiểm tra trống
             if (string.IsNullOrEmpty(newSerial))
             {
                 MessageBox.Show("Số Serial không được để trống!", "Nhập liệu sai", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            // 2. Kiểm tra trùng Serial (Thông báo chuẩn cho người dùng)
             if (_productItemRepo.IsSerialDuplicate(newSerial, currentItemId))
             {
                 MessageBox.Show($"Số Serial '{newSerial}' đã tồn tại trong hệ thống. Vui lòng nhập mã khác!",
@@ -173,7 +177,6 @@ namespace LaptopShop.WPF.Frames
         {
             if ((sender as Button)?.DataContext is ProductItem item)
             {
-                // Kiểm tra nhanh tại giao diện trước
                 if (item.Status != "InStock" && item.Status != "Defective")
                 {
                     MessageBox.Show($"Thiết bị đang ở trạng thái '{item.Status}', không được phép xóa!",
@@ -207,10 +210,10 @@ namespace LaptopShop.WPF.Frames
         private void btnBack_Click(object sender, RoutedEventArgs e) => NavigationService.GoBack();
         private void btnGoToExport_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new OrderExportPage());
         private void btnViewReturned_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new ReturnedOrderPage());
-        // Thêm hàm này vào để khớp với khai báo trong XAML
+
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadData(); // Gọi hàm này để làm mới dữ liệu mỗi khi trang hiện lên
+            LoadData();
         }
     }
 }
