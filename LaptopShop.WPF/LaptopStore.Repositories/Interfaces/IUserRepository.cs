@@ -1,17 +1,17 @@
 ﻿using LaptopShop.Entities.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LaptopShop.Repositories.Interfaces
 {
-    public  interface IUserRepository
+    public interface IUserRepository
     {
         List<User> GetAll();
         User GetById(int id);
         User GetByUsername(string username);
+        User GetByEmail(string email);
+        List<Role> GetAllRoles();
+        int CountActiveAdmins();
+        bool UserHasRole(int userId, string roleName);
+
         void Add(User user);
         void Update(User user);
         void Delete(int id);

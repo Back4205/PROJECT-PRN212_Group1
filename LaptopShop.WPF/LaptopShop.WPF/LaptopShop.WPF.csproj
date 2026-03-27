@@ -8,4 +8,10 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LaptopStore.Entities\LaptopShop.Entities.csproj" />
+    <ProjectReference Include="..\LaptopStore.Repositories\LaptopShop.Repositories.csproj" />
+    <ProjectReference Include="..\LaptopStore.Services\LaptopShop.Services.csproj" />
+  </ItemGroup>
+
 </Project>

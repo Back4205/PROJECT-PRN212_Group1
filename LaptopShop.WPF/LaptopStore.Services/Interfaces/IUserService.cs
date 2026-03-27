@@ -1,15 +1,16 @@
 ﻿using LaptopShop.Entities.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LaptopShop.Services.Interfaces
 {
-    public  interface IUserService
+    public interface IUserService
     {
         User Login(string username, string password);
         void Register(User user);
+
+        List<User> GetAllUsers();
+        List<Role> GetAllRoles();
+        void UpdateUserRoles(int userId, List<int> roleIds);
+        void SetUserActiveStatus(int userId, bool isActive);
+        void DeleteUser(int userId);
     }
 }

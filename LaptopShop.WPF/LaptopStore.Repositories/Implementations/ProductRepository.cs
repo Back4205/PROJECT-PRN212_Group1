@@ -1,14 +1,10 @@
 ﻿using LaptopShop.Entities.Models;
 using LaptopShop.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace LaptopShop.Repositories.Implementations
 {
-    public  class ProductRepository : IProductRepository 
+    public class ProductRepository : IProductRepository
     {
         private readonly LaptopShopDbContext _context;
 
@@ -17,29 +13,64 @@ namespace LaptopShop.Repositories.Implementations
             _context = new LaptopShopDbContext();
         }
 
-        public void Add(Product product)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<Product> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Products
+                .OrderByDescending(p => p.ProductId)
+                .ToList();
         }
 
         public Product GetById(int id)
         {
-            throw new NotImplementedException();
+            return _context.Products
+                .Include(p => p.OrderItems)
+                .FirstOrDefault(p => p.ProductId == id);
+        }
+
+        public Product GetByCode(string productCode)
+        {
+            return _context.Products
+                .FirstOrDefault(p => p.ProductCode == productCode);
+        }
+
+        public List<Product> Search(string keyword)
+        {
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                return GetAll();
+            }
+
+            keyword = keyword.Trim().ToLower();
+
+            return _context.Products
+                .Where(p =>
+                    p.ProductCode.ToLower().Contains(keyword) ||
+                    p.ProductName.ToLower().Contains(keyword) ||
+                    p.Brand.ToLower().Contains(keyword))
+                .OrderByDescending(p => p.ProductId)
+                .ToList();
+        }
+
+        public void Add(Product product)
+        {
+            _context.Products.Add(product);
+            _context.SaveChanges();
         }
 
         public void Update(Product product)
         {
-            throw new NotImplementedException();
+            _context.Products.Update(product);
+            _context.SaveChanges();
+        }
+
+        public void Delete(int id)
+        {
+            var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
+            if (product != null)
+            {
+                _context.Products.Remove(product);
+                _context.SaveChanges();
+            }
         }
     }
 }

@@ -2,12 +2,7 @@
 using LaptopShop.Repositories.Implementations;
 using LaptopShop.Repositories.Interfaces;
 using LaptopShop.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using Microsoft.EntityFrameworkCore;
 namespace LaptopShop.Services.Implementations
 {
     public class ProductService : IProductService
@@ -19,34 +14,106 @@ namespace LaptopShop.Services.Implementations
             _productRepository = new ProductRepository();
         }
 
-        public void Add(Product product)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<Product> GetAll()
         {
-            throw new NotImplementedException();
+            return _productRepository.GetAll();
         }
 
         public Product GetById(int id)
         {
-            throw new NotImplementedException();
+            var product = _productRepository.GetById(id);
+            if (product == null)
+            {
+                throw new Exception("Không tìm thấy sản phẩm.");
+            }
+
+            return product;
         }
 
         public List<Product> Search(string keyword)
         {
-            throw new NotImplementedException();
+            return _productRepository.Search(keyword);
+        }
+
+        public void Add(Product product)
+        {
+            ValidateProduct(product);
+
+            var existing = _productRepository.GetByCode(product.ProductCode.Trim());
+            if (existing != null)
+            {
+                throw new Exception("Mã sản phẩm đã tồn tại.");
+            }
+
+            product.ProductCode = product.ProductCode.Trim();
+            product.ProductName = product.ProductName.Trim();
+            product.Brand = product.Brand.Trim();
+            product.ImgUrl = string.IsNullOrWhiteSpace(product.ImgUrl) ? null : product.ImgUrl.Trim();
+            product.IsActive = true;
+
+            _productRepository.Add(product);
         }
 
         public void Update(Product product)
         {
-            throw new NotImplementedException();
+            ValidateProduct(product);
+
+            var existing = _productRepository.GetById(product.ProductId);
+            if (existing == null)
+            {
+                throw new Exception("Không tìm thấy sản phẩm.");
+            }
+
+            var duplicateCode = _productRepository.GetByCode(product.ProductCode.Trim());
+            if (duplicateCode != null && duplicateCode.ProductId != product.ProductId)
+            {
+                throw new Exception("Mã sản phẩm đã tồn tại.");
+            }
+
+            existing.ProductCode = product.ProductCode.Trim();
+            existing.ProductName = product.ProductName.Trim();
+            existing.Brand = product.Brand.Trim();
+            existing.BasePrice = product.BasePrice;
+            existing.ImgUrl = string.IsNullOrWhiteSpace(product.ImgUrl) ? null : product.ImgUrl.Trim();
+            existing.IsActive = product.IsActive;
+
+            _productRepository.Update(existing);
+        }
+
+        public void Delete(int id)
+        {
+            var product = _productRepository.GetById(id);
+            if (product == null)
+            {
+                throw new Exception("Không tìm thấy sản phẩm.");
+            }
+
+            if (product.OrderItems != null && product.OrderItems.Any())
+            {
+                product.IsActive = false;
+                _productRepository.Update(product);
+                return;
+            }
+
+            _productRepository.Delete(id);
+        }
+
+        private void ValidateProduct(Product product)
+        {
+            if (product == null)
+                throw new Exception("Dữ liệu sản phẩm không hợp lệ.");
+
+            if (string.IsNullOrWhiteSpace(product.ProductCode))
+                throw new Exception("Mã sản phẩm không được để trống.");
+
+            if (string.IsNullOrWhiteSpace(product.ProductName))
+                throw new Exception("Tên sản phẩm không được để trống.");
+
+            if (string.IsNullOrWhiteSpace(product.Brand))
+                throw new Exception("Brand không được để trống.");
+
+            if (product.BasePrice <= 0)
+                throw new Exception("Giá phải lớn hơn 0.");
         }
     }
 }

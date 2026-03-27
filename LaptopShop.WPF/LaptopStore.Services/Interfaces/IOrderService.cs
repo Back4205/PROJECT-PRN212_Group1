@@ -1,9 +1,4 @@
 ﻿using LaptopShop.Entities.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LaptopShop.Services.Interfaces
 {
@@ -14,5 +9,9 @@ namespace LaptopShop.Services.Interfaces
         void CreateOrder(Order order);
         void Update(Order order);
         void Delete(int id);
+
+        int GetTotalOrders();
+        decimal GetTotalRevenue();
+        int GetOrderCountByStatus(string status);
     }
 }
