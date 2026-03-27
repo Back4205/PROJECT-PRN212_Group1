@@ -16,5 +16,8 @@ namespace LaptopShop.Repositories.Interfaces
         void Delete(int id);
         void UpdateStatus(int orderId, string status);
         List<Order> GetAllProductByCustomerID(int id);
+        List<Order> GetConfirmedOrdersWithItems();
+        void CompleteOrderExport(int orderId);
+        bool IsSerialDuplicate(string serial, int currentId);
     }
 }
