@@ -6,6 +6,7 @@ using LaptopShop.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace LaptopShop.Services.Implementations
 {
@@ -18,7 +19,6 @@ namespace LaptopShop.Services.Implementations
             _userRepository = new UserRepository();
         }
 
-        // ================= LOGIN =================
         public User Login(string username, string password)
         {
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
@@ -48,7 +48,6 @@ namespace LaptopShop.Services.Implementations
             return user;
         }
 
-        // ================= REGISTER =================
         public void Register(User user)
         {
             if (user == null)
@@ -79,7 +78,6 @@ namespace LaptopShop.Services.Implementations
             _userRepository.Add(user);
         }
 
-        // ================= GET =================
         public List<User> GetAllUsers()
         {
             return _userRepository.GetAll();
@@ -90,7 +88,6 @@ namespace LaptopShop.Services.Implementations
             return _userRepository.GetAllRoles();
         }
 
-        // ================= UPDATE ROLE =================
         public void UpdateUserRoles(int userId, List<int> roleIds)
         {
             if (roleIds == null || roleIds.Count == 0)
@@ -119,13 +116,11 @@ namespace LaptopShop.Services.Implementations
 
             int activeAdminCount = _userRepository.CountActiveAdmins();
 
-            // ❗ CHẶN XÓA ADMIN CUỐI
             if (userInDb.IsActive && wasAdmin && !willBeAdmin && activeAdminCount <= 1)
             {
                 throw new Exception("Không thể bỏ role Admin của admin cuối cùng.");
             }
 
-            // ❗ RESET ROLE
             userInDb.Roles.Clear();
 
             foreach (var role in selectedRoles)
@@ -136,7 +131,6 @@ namespace LaptopShop.Services.Implementations
             context.SaveChanges();
         }
 
-        // ================= LOCK / UNLOCK =================
         public void SetUserActiveStatus(int userId, bool isActive)
         {
             var user = _userRepository.GetById(userId);
@@ -149,7 +143,6 @@ namespace LaptopShop.Services.Implementations
             bool isAdmin = user.Roles.Any(r => r.RoleName == "Admin");
             int activeAdminCount = _userRepository.CountActiveAdmins();
 
-            // ❗ CHẶN LOCK ADMIN CUỐI
             if (!isActive && user.IsActive && isAdmin && activeAdminCount <= 1)
             {
                 throw new Exception("Không thể khóa admin cuối cùng.");
@@ -159,7 +152,6 @@ namespace LaptopShop.Services.Implementations
             _userRepository.Update(user);
         }
 
-        // ================= DELETE =================
         public void DeleteUser(int userId)
         {
             var user = _userRepository.GetById(userId);
@@ -180,7 +172,6 @@ namespace LaptopShop.Services.Implementations
             _userRepository.Delete(userId);
         }
 
-        // ================= ADD USER (ADMIN) =================
         public void AddUserByAdmin(User user, List<int> roleIds)
         {
             if (user == null)
@@ -228,26 +219,41 @@ namespace LaptopShop.Services.Implementations
             context.SaveChanges();
         }
 
-        // ================= VALIDATE =================
         private void ValidateUserBasicInfo(User user)
         {
             if (string.IsNullOrWhiteSpace(user.Username))
                 throw new Exception("Username không được để trống.");
 
+            if (user.Username.Trim().Length < 3)
+                throw new Exception("Username phải có ít nhất 3 ký tự.");
+
             if (string.IsNullOrWhiteSpace(user.PasswordHash))
                 throw new Exception("Password không được để trống.");
+
+            if (user.PasswordHash.Trim().Length < 6)
+                throw new Exception("Password phải có ít nhất 6 ký tự.");
 
             if (string.IsNullOrWhiteSpace(user.FullName))
                 throw new Exception("Full name không được để trống.");
 
+            if (user.FullName.Trim().Length < 2)
+                throw new Exception("Full name không hợp lệ.");
+
             if (string.IsNullOrWhiteSpace(user.Email))
                 throw new Exception("Email không được để trống.");
 
+            string email = user.Email.Trim();
+            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                throw new Exception("Email không đúng định dạng.");
+
             if (string.IsNullOrWhiteSpace(user.Phone))
                 throw new Exception("Phone không được để trống.");
+
+            string phone = user.Phone.Trim();
+            if (!Regex.IsMatch(phone, @"^\d{9,11}$"))
+                throw new Exception("Phone phải gồm 9 đến 11 chữ số.");
         }
 
-        // ================= HASH =================
         private string HashPassword(string password)
         {
             using SHA256 sha256 = SHA256.Create();

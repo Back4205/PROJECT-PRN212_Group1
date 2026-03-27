@@ -68,12 +68,18 @@ namespace LaptopShop.WPF.Frames.AdminTabs
         {
             try
             {
+                if (!decimal.TryParse(txtBasePrice.Text, out decimal price))
+                {
+                    MessageBox.Show("Price phải là số hợp lệ.");
+                    return;
+                }
+
                 Product product = new Product
                 {
                     ProductCode = txtProductCode.Text,
                     ProductName = txtProductName.Text,
                     Brand = txtBrand.Text,
-                    BasePrice = decimal.Parse(txtBasePrice.Text),
+                    BasePrice = price,
                     ImgUrl = txtImgUrl.Text,
                     IsActive = chkIsActive.IsChecked ?? true
                 };
@@ -94,13 +100,25 @@ namespace LaptopShop.WPF.Frames.AdminTabs
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(txtProductId.Text))
+                {
+                    MessageBox.Show("Vui lòng chọn sản phẩm.");
+                    return;
+                }
+
+                if (!decimal.TryParse(txtBasePrice.Text, out decimal price))
+                {
+                    MessageBox.Show("Price phải là số hợp lệ.");
+                    return;
+                }
+
                 Product product = new Product
                 {
                     ProductId = int.Parse(txtProductId.Text),
                     ProductCode = txtProductCode.Text,
                     ProductName = txtProductName.Text,
                     Brand = txtBrand.Text,
-                    BasePrice = decimal.Parse(txtBasePrice.Text),
+                    BasePrice = price,
                     ImgUrl = txtImgUrl.Text,
                     IsActive = chkIsActive.IsChecked ?? true
                 };
