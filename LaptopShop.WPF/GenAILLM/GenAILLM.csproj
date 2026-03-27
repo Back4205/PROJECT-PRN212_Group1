@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+<TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LaptopShop.WPF\LaptopShop.WPF.csproj" />
+    <ProjectReference Include="..\LaptopStore.Entities\LaptopShop.Entities.csproj" />
+    <ProjectReference Include="..\LaptopStore.Repositories\LaptopShop.Repositories.csproj" />
+    <ProjectReference Include="..\LaptopStore.Services\LaptopShop.Services.csproj" />
+  </ItemGroup>
+
+</Project>
