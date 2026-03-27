@@ -26,5 +26,8 @@ public partial class User
     public virtual ICollection<Warehouse> Warehouses { get; set; } = new List<Warehouse>();
 
     public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/Qui
 }

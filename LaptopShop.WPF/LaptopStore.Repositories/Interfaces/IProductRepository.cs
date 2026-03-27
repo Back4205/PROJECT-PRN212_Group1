@@ -1,4 +1,5 @@
 ﻿using LaptopShop.Entities.Models;
+<<<<<<< HEAD
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,3 +19,19 @@ namespace LaptopShop.Repositories.Interfaces
         public List<Product> SearchAndFilter(string keyword, string brand, decimal minPrice, decimal maxPrice);
     }
 }
+=======
+
+namespace LaptopShop.Repositories.Interfaces
+{
+    public interface IProductRepository
+    {
+        List<Product> GetAll();
+        Product GetById(int id);
+        Product GetByCode(string productCode);
+        List<Product> Search(string keyword);
+        void Add(Product product);
+        void Update(Product product);
+        void Delete(int id);
+    }
+}
+>>>>>>> origin/Qui

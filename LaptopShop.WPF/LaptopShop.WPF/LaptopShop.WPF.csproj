@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <None Remove="Images\Banner.jpg" />
     <None Remove="Images\mba.jpg" />
     <None Remove="Images\rog.jpg" />
@@ -41,4 +42,11 @@
     </Resource>
   </ItemGroup>
 
+=======
+    <ProjectReference Include="..\LaptopStore.Entities\LaptopShop.Entities.csproj" />
+    <ProjectReference Include="..\LaptopStore.Repositories\LaptopShop.Repositories.csproj" />
+    <ProjectReference Include="..\LaptopStore.Services\LaptopShop.Services.csproj" />
+  </ItemGroup>
+
+>>>>>>> origin/Qui
 </Project>

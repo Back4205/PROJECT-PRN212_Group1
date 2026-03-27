@@ -1,0 +1,30 @@
+﻿<Page x:Class="LaptopShop.WPF.Frames.AdminHomePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:tabs="clr-namespace:LaptopShop.WPF.Frames.AdminTabs"
+      mc:Ignorable="d"
+      d:DesignHeight="700" d:DesignWidth="1200"
+      Title="AdminHomePage">
+
+    <Grid Background="White" Margin="10">
+        <TabControl>
+            <TabItem Header="Dashboard">
+                <tabs:DashboardTab x:Name="dashboardTab"/>
+            </TabItem>
+
+            <TabItem Header="Manage Products">
+                <tabs:ProductManagementTab x:Name="productTab"/>
+            </TabItem>
+
+            <TabItem Header="Manage Accounts">
+                <tabs:UserManagementTab x:Name="userTab"/>
+            </TabItem>
+
+            <TabItem Header="Manage Orders">
+                <tabs:OrderManagementTab x:Name="orderTab"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Page>

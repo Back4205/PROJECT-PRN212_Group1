@@ -5,8 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LaptopShop.WPF"
         mc:Ignorable="d"
+<<<<<<< HEAD
         Title="MainWindow" WindowState="Maximized">
     <Grid>
         <Frame x:Name="MainFrame"/>
     </Grid>
 </Window>
+=======
+        Title="MainWindow" Height="700" Width="1200">
+    <Frame x:Name="MainFrame"/>
+</Window>
+>>>>>>> origin/Qui

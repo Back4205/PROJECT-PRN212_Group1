@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="LaptopShop.WPF.Frames.AdminTabs.DashboardTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="700" d:DesignWidth="1200">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="10">
+            <TextBlock Text="Admin Dashboard"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       Margin="0,0,0,20"/>
+
+            <WrapPanel Margin="0,0,0,20">
+                <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="5" Width="180">
+                    <StackPanel>
+                        <TextBlock Text="Total Users" FontWeight="Bold"/>
+                        <TextBlock x:Name="txtTotalUsers" FontSize="20"/>
+                    </StackPanel>
+                </Border>
+
+                <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="5" Width="180">
+                    <StackPanel>
+                        <TextBlock Text="Active Users" FontWeight="Bold"/>
+                        <TextBlock x:Name="txtActiveUsers" FontSize="20"/>
+                    </StackPanel>
+                </Border>
+
+                <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="5" Width="180">
+                    <StackPanel>
+                        <TextBlock Text="Total Products" FontWeight="Bold"/>
+                        <TextBlock x:Name="txtTotalProducts" FontSize="20"/>
+                    </StackPanel>
+                </Border>
+
+                <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="5" Width="180">
+                    <StackPanel>
+                        <TextBlock Text="Active Products" FontWeight="Bold"/>
+                        <TextBlock x:Name="txtActiveProducts" FontSize="20"/>
+                    </StackPanel>
+                </Border>
+
+                <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="5" Width="180">
+                    <StackPanel>
+                        <TextBlock Text="Total Orders" FontWeight="Bold"/>
+                        <TextBlock x:Name="txtTotalOrders" FontSize="20"/>
+                    </StackPanel>
+                </Border>
+
+                <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="5" Width="180">
+                    <StackPanel>
+                        <TextBlock Text="Revenue" FontWeight="Bold"/>
+                        <TextBlock x:Name="txtRevenue" FontSize="20"/>
+                    </StackPanel>
+                </Border>
+            </WrapPanel>
+
+            <TextBlock Text="Order Status Summary"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       Margin="0,10,0,10"/>
+
+            <WrapPanel>
+                <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="5" Width="180">
+                    <StackPanel>
+                        <TextBlock Text="Pending" FontWeight="Bold"/>
+                        <TextBlock x:Name="txtPendingOrders" FontSize="18"/>
+                    </StackPanel>
+                </Border>
+
+                <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="5" Width="180">
+                    <StackPanel>
+                        <TextBlock Text="Confirmed" FontWeight="Bold"/>
+                        <TextBlock x:Name="txtConfirmedOrders" FontSize="18"/>
+                    </StackPanel>
+                </Border>
+
+                <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="5" Width="180">
+                    <StackPanel>
+                        <TextBlock Text="Cancelled" FontWeight="Bold"/>
+                        <TextBlock x:Name="txtCancelledOrders" FontSize="18"/>
+                    </StackPanel>
+                </Border>
+
+                <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="5" Width="180">
+                    <StackPanel>
+                        <TextBlock Text="Completed" FontWeight="Bold"/>
+                        <TextBlock x:Name="txtCompletedOrders" FontSize="18"/>
+                    </StackPanel>
+                </Border>
+            </WrapPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

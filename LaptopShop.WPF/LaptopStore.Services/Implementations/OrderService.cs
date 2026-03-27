@@ -2,15 +2,19 @@
 using LaptopShop.Repositories.Implementations;
 using LaptopShop.Repositories.Interfaces;
 using LaptopShop.Services.Interfaces;
+<<<<<<< HEAD
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+=======
+>>>>>>> origin/Qui
 
 namespace LaptopShop.Services.Implementations
 {
     public class OrderService : IOrderService
     {
+<<<<<<< HEAD
         private readonly OrderRepository _orderRepository;
         private readonly CartRepository _cartRepository;
         private readonly UserRepository _userRepository;
@@ -93,6 +97,13 @@ namespace LaptopShop.Services.Implementations
         public Order GetOrderDetails(int orderId)
         {
             return _orderRepository.GetById(orderId);
+=======
+        private readonly IOrderRepository _orderRepository;
+
+        public OrderService()
+        {
+            _orderRepository = new OrderRepository();
+>>>>>>> origin/Qui
         }
 
         public List<Order> GetAll()
@@ -100,8 +111,43 @@ namespace LaptopShop.Services.Implementations
             return _orderRepository.GetAll();
         }
 
+<<<<<<< HEAD
         public void Update(Order order)
         {
+=======
+        public Order GetById(int id)
+        {
+            var order = _orderRepository.GetById(id);
+            if (order == null)
+            {
+                throw new Exception("Không tìm thấy đơn hàng.");
+            }
+            return order;
+        }
+
+        public List<OrderItem> GetOrderItemsByOrderId(int orderId)
+        {
+            return _orderRepository.GetOrderItemsByOrderId(orderId);
+        }
+
+        public void CreateOrder(Order order)
+        {
+            if (order == null)
+                throw new Exception("Order không hợp lệ.");
+
+            order.OrderDate = DateTime.Now;
+            if (string.IsNullOrEmpty(order.Status))
+                order.Status = "Pending";
+
+            _orderRepository.Add(order);
+        }
+
+        public void Update(Order order)
+        {
+            if (order == null)
+                throw new Exception("Order không hợp lệ.");
+
+>>>>>>> origin/Qui
             _orderRepository.Update(order);
         }
 
@@ -109,9 +155,26 @@ namespace LaptopShop.Services.Implementations
         {
             _orderRepository.Delete(id);
         }
+<<<<<<< HEAD
         public bool CancelOrder(int orderId)
         {
            return _orderRepository.CancelOrder(orderId);
+=======
+
+        public int GetTotalOrders()
+        {
+            return _orderRepository.CountAll();
+        }
+
+        public decimal GetTotalRevenue()
+        {
+            return _orderRepository.GetTotalRevenue();
+        }
+
+        public int GetOrderCountByStatus(string status)
+        {
+            return _orderRepository.CountByStatus(status);
+>>>>>>> origin/Qui
         }
     }
 }

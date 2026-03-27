@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -55,6 +56,19 @@ namespace LaptopShop.WPF
                     MessageBox.Show("Unknown role!");
                     break;
             }
+=======
+﻿using LaptopShop.WPF.Frames;
+using System.Windows;
+
+namespace LaptopShop.WPF
+{
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+            MainFrame.Navigate(new AdminHomePage());
+>>>>>>> origin/Qui
         }
     }
 }

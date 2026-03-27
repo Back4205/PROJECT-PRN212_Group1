@@ -285,7 +285,10 @@ public partial class LaptopShopDbContext : DbContext
                 .HasConstraintName("FK__Warehouse__Manag__4CA06362");
         });
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/Qui
         OnModelCreatingPartial(modelBuilder);
     }
 
