@@ -7,20 +7,46 @@
       d:DesignHeight="700" d:DesignWidth="1200"
       Title="AdminHomePage">
 
-    <Grid Background="White" Margin="10">
-        <TabControl>
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" Padding="20,10">
+            <Grid>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="ADMIN PANEL" FontSize="18" FontWeight="Bold" Foreground="#6366f1"/>
+                </StackPanel>
+
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                    <StackPanel Margin="0,0,10,0" VerticalAlignment="Center">
+                        <TextBlock x:Name="txtAdminName" FontWeight="Bold" Foreground="#1e293b" HorizontalAlignment="Right"/>
+                        <TextBlock Text="ADMINISTRATOR" FontSize="9" Foreground="#6366f1" HorizontalAlignment="Right"/>
+                    </StackPanel>
+
+                    <Button x:Name="btnLogout" Content="Logout" Padding="10,5" Background="#ef4444" Foreground="White" 
+                        BorderThickness="0" Cursor="Hand" Click="btnLogout_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="5"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <TabControl Grid.Row="1" Margin="10">
             <TabItem Header="Dashboard">
                 <tabs:DashboardTab x:Name="dashboardTab"/>
             </TabItem>
-
             <TabItem Header="Manage Products">
                 <tabs:ProductManagementTab x:Name="productTab"/>
             </TabItem>
-
             <TabItem Header="Manage Accounts">
                 <tabs:UserManagementTab x:Name="userTab"/>
             </TabItem>
-
             <TabItem Header="Manage Orders">
                 <tabs:OrderManagementTab x:Name="orderTab"/>
             </TabItem>
