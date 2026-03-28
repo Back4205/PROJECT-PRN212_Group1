@@ -58,19 +58,24 @@ namespace LaptopShop.WPF.Pages.Admin
                 txtFullName.Text = user.FullName;
                 txtEmail.Text = user.Email;
 
-                lbRoles.UnselectAll();
                 lbRoles.SelectedItems.Clear();
 
-                foreach (var role in _allRoles)
+                // Kiểm tra xem User có Roles không để tránh lỗi Null
+                if (user.Roles != null)
                 {
-                    if (user.Roles.Any(r => r.RoleId == role.RoleId))
+                    foreach (var userRole in user.Roles)
                     {
-                        lbRoles.SelectedItems.Add(role);
+                        // Tìm đúng cái đối tượng Role trong danh sách gốc _allRoles mà ListBox đang dùng
+                        var roleInList = _allRoles.FirstOrDefault(r => r.RoleId == userRole.RoleId);
+
+                        if (roleInList != null)
+                        {
+                            lbRoles.SelectedItems.Add(roleInList);
+                        }
                     }
                 }
             }
         }
-
         private void btnUpdateRoles_Click(object sender, RoutedEventArgs e)
         {
             try

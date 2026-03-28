@@ -66,12 +66,18 @@ namespace LaptopShop.Repositories.Implementations
 
         public List<User> GetAll()
         {
-            return _context.Users.ToList();
+            // Thêm Include để lôi các Role đi kèm theo User
+            return _context.Users
+                .Include(u => u.Roles)
+                .ToList();
         }
 
         public User GetById(int id)
         {
-            return _context.Users.FirstOrDefault(u => u.UserId == id);
+            // Tương tự cho hàm lấy theo ID
+            return _context.Users
+                .Include(u => u.Roles)
+                .FirstOrDefault(u => u.UserId == id);
         }
 
         public User GetByUsername(string username)

@@ -25,24 +25,29 @@ namespace LaptopShop.Repositories.Implementations
 
         public void Delete(int id)
         {
-            var item = _context.ProductItems.Find(id);
-            if (item != null)
+            // 1. Tìm sản phẩm trong bảng Product
+            var product = _context.Products.Find(id);
+
+            if (product != null)
             {
-                // Chỉ cho phép xóa nếu trạng thái là InStock hoặc Defective
-                if (item.Status == "InStock" || item.Status == "Defective")
+                // 2. Kiểm tra xem sản phẩm này đã từng xuất hiện trong đơn hàng nào chưa
+                bool hasBeenOrdered = _context.OrderItems.Any(oi => oi.ProductId == id);
+
+                if (hasBeenOrdered)
                 {
-                    _context.ProductItems.Remove(item);
+                    // CASE 1: Đã có trong đơn hàng -> Chỉ ẩn đi (Bỏ tích Active)
+                    product.IsActive = false;
                     _context.SaveChanges();
+                    // Má có thể quăng một cái message nhẹ ở đây: "Sản phẩm đã có đơn hàng nên chỉ chuyển sang trạng thái Ngưng bán."
                 }
                 else
                 {
-                    // Quăng lỗi để tầng giao diện (UI) có thể bắt và hiển thị thông báo
-                    throw new InvalidOperationException($"Không thể xóa thiết bị đang ở trạng thái: {item.Status}");
+                    // CASE 2: Chưa có đơn hàng nào -> Xóa sổ luôn
+                    _context.Products.Remove(product);
+                    _context.SaveChanges();
                 }
             }
         }
-
-
 
         public List<Product> GetAll()
         {
@@ -58,15 +63,25 @@ namespace LaptopShop.Repositories.Implementations
         {
             var products = _context.Products.AsQueryable();
 
-            if (!string.IsNullOrEmpty(keyword))
-            {
-                products = products.Where(p => p.ProductName.Contains(keyword));
-            }
+            // 1. Tìm theo tên HOẶC mã sản phẩm (Thêm tìm theo mã để search LAP001 được)
+           if (!string.IsNullOrEmpty(keyword)) if (!string.IsNullOrEmpty(keyword))
+                {
+                  
+                    products = products.Where(p => p.ProductName.Contains(keyword)
+                                                || p.ProductCode.Contains(keyword)
+                                                || p.Brand.Contains(keyword));
+                }
 
+            // 2. Lọc theo thương hiệu
             if (!string.IsNullOrEmpty(brand))
             {
                 products = products.Where(p => p.Brand == brand);
             }
+
+            // 3. FIX LỖI OVERFLOW: Khống chế maxPrice không được quá lớn so với SQL
+            decimal sqlMaxDecimal = 999999999999999; // Giới hạn an toàn cho SQL
+            if (maxPrice > sqlMaxDecimal) maxPrice = sqlMaxDecimal;
+            if (minPrice < 0) minPrice = 0;
 
             products = products.Where(p => p.BasePrice >= minPrice && p.BasePrice <= maxPrice);
 
@@ -74,10 +89,9 @@ namespace LaptopShop.Repositories.Implementations
         }
 
 
-
         public void Update(Product product)
         {
-            var oldProduct = _context.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
+            var oldProduct = _context.Products.Find(product.ProductId);
             if (oldProduct != null)
             {
                 oldProduct.ProductName = product.ProductName;
@@ -85,6 +99,9 @@ namespace LaptopShop.Repositories.Implementations
                 oldProduct.Brand = product.Brand;
                 oldProduct.BasePrice = product.BasePrice;
                 oldProduct.ImgUrl = product.ImgUrl;
+
+                // PHẢI CÓ DÒNG NÀY THÌ NÓ MỚI TÍCH LẠI ĐƯỢC NÈ MÁ:
+                oldProduct.IsActive = product.IsActive;
 
                 _context.SaveChanges();
             }
